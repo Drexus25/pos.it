@@ -1,0 +1,142 @@
+html, body {
+                height: 100%;
+                font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                color: #1a1a1a;
+            }
+
+            .login-left {
+                background-color: #7d2e0e;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 36px 40px;
+                color: #fff;
+            }
+            .login-left .brand-logo {
+                width: 36px;
+                height: 36px;
+                background-color: rgba(255,255,255,0.2);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+            }
+            .login-left h2 {
+                font-size: 2.2rem;
+                font-weight: 800;
+                line-height: 1.15;
+            }
+            .login-left p {
+                color: rgba(255,255,255,0.75);
+                font-size: 0.9rem;
+            }
+            .login-left .footer-text {
+                color: rgba(255,255,255,0.5);
+                font-size: 0.8rem;
+            }
+
+            .login-right {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .login-right .top-nav {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 32px;
+                font-size: 0.875rem;
+            }
+            .login-right .top-nav a {
+                color: #4b5563;
+                text-decoration: none;
+            }
+            .login-right .top-nav a:hover {
+                color: #1a1a1a;
+            }
+            .login-right .form-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 40px 80px;
+                max-width: 560px;
+                width: 100%;
+                margin: 0 auto;
+            }
+            .login-right .bottom-note {
+                padding: 20px 32px;
+                text-align: center;
+                font-size: 0.8rem;
+                color: #9ca3af;
+            }
+
+            .form-control {
+                border-radius: 8px;
+                border-color: #d1d5db;
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+            .form-control:focus {
+                border-color: #7d2e0e;
+                box-shadow: 0 0 0 3px rgba(125,46,14,0.12);
+            }
+            .input-group .input-group-text {
+                background: #fff;
+                border-color: #d1d5db;
+                border-radius: 0 8px 8px 0;
+                color: #9ca3af;
+                cursor: pointer;
+            }
+            .input-group .form-control {
+                border-right: none;
+                border-radius: 8px 0 0 8px;
+            }
+            .input-group .form-control:focus + .input-group-text {
+                border-color: #7d2e0e;
+            }
+
+            .btn-login {
+                background-color: #7d2e0e;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 12px;
+                font-weight: 600;
+                font-size: 0.95rem;
+                width: 100%;
+            }
+            .btn-login:hover {
+                background-color: #6b2609;
+                color: #fff;
+            }
+
+            .link-orange {
+                color: #7d2e0e;
+                font-weight: 600;
+                text-decoration: none;
+            }
+            .link-orange:hover {
+                text-decoration: underline;
+                color: #6b2609;
+            }
+
+            .form-check-input:checked {
+                background-color: #7d2e0e;
+                border-color: #7d2e0e;
+            }
+            .form-check-input:focus {
+                box-shadow: 0 0 0 3px rgba(125,46,14,0.12);
+            }
+
+            @media (max-width: 767px) {
+                .login-left {
+                    min-height: auto;
+                    padding: 28px 24px;
+                }
+                .login-right .form-area {
+                    padding: 32px 24px;
+                }
+            }
