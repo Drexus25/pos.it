@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Masuk — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+        <link href="css/loginStyle.css" rel="stylesheet" />
+    </head>
+
+    <body>
+        <div class="container-fluid p-0">
+            <div class="row g-0">
+
+                <div class="d-none d-md-flex col-md-5 col-lg-4 login-left">
+                    <div>
+                        <a href="index.html" class="d-flex align-items-center gap-2 text-white text-decoration-none fw-bold mb-5">
+                            <span class="brand-logo">
+                                <i class="bi bi-box"></i>
+                            </span>
+                            pos.it
+                        </a>
+                    </div>
+
+                    <div>
+                        <h2 class="mb-3">
+                            Usaha tertata.<br>
+                            Hari lebih tenang.
+                        </h2>
+                        <p>Dari pesanan pertama hingga laporan harian, semua ada di satu tempat.</p>
+                    </div>
+
+                    <div>
+                        <span class="footer-text">pos.it - Dirancang untuk usaha Anda</span>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-7 col-lg-8 login-right">
+                    <div class="top-nav">
+                        <a href="index.html">
+                            <i class="bi bi-arrow-left me-1"></i>
+                        </a>
+                    </div>
+
+                    <div class="form-area">
+                        <h3 class="fw-bold mb-4" style="font-size: 1.75rem;">Senang melihat Anda lagi.</h3>
+
+                        <form id="loginForm" novalidate>
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold small" for="email">Email atau nomor HP</label>
+                                <div class="input-group">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="email"
+                                        autocomplete="username"
+                                    />
+                                    <span class="input-group-text">
+                                        <i class="bi bi-envelope"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold small" for="password">Kata sandi</label>
+                                <div class="input-group">
+                                    <input
+                                        type="password"
+                                        class="form-control"
+                                        id="password"
+                                        autocomplete="current-password"
+                                    />
+                                    <span class="input-group-text" id="togglePassword" role="button" title="Tampilkan kata sandi">
+                                        <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-login mb-4">
+                                <i class="bi bi-arrow-right me-1"></i> Masuk
+                            </button>
+
+                            <p class="text-center text-secondary small mb-0">
+                                Belum punya akun usaha? <a href="register.html" class="link-orange">Daftar</a>
+                            </p>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+        <script>
+            const DUMMY_USERS = [
+                { credential: 'damar@imkafe.id', password: 'kafe1234', name: 'Damar', role: 'owner', business: 'Kafe IMKafe' },
+                { credential: '081234567890',    password: 'kasir123', name: 'Rosy',  role: 'kasir', business: 'Kafe IMKafe' }
+            ];
+
+            const toggle = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            toggle.addEventListener('click', () => {
+                const isHidden = passwordInput.type === 'password';
+                passwordInput.type = isHidden ? 'text' : 'password';
+                toggleIcon.className = isHidden ? 'bi bi-eye' : 'bi bi-eye-slash';
+            });
+
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const credential = document.getElementById('email').value.trim();
+                const password = passwordInput.value;
+
+                const user = DUMMY_USERS.find(u => u.credential === credential && u.password === password);
+
+                if (user) {
+                    sessionStorage.setItem('pos_user', JSON.stringify({ name: user.name, role: user.role, business: user.business }));
+                    if (user.role === 'kasir') {
+                        window.location.href = 'dashboard-cashier.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

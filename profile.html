@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Profil Usaha — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/addProductStyle.css" rel="stylesheet" />
+        <link href="css/profileStyle.css" rel="stylesheet" />
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                <div class="topbar-user">
+                    <span class="topbar-avatar">D</span>
+                    Damar
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products.html" class="nav-item">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier.html" class="nav-item">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="report.html" class="nav-item">
+                <i class="bi bi-graph-up"></i> Laporan
+            </a>
+            <a href="stock.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <i class="bi bi-gear"></i> Profil
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Profil</h1>
+            </div>
+
+            <div class="profile-layout">
+
+                <div>
+                    <div class="profile-card">
+                        <div class="profile-card-title">Identitas usaha</div>
+
+                        <div class="logo-upload-wrap">
+                            <div class="logo-preview-circle" id="formLogoCircle">
+                                <i class="bi bi-cup-hot" id="formLogoIcon"></i>
+                            </div>
+                            <div class="logo-upload-info">
+                                <div class="logo-upload-title">Logo untuk struk</div>
+                                <input type="file" id="logoInput" accept="image/png,image/jpeg" style="display:none;" />
+                                <button type="button" class="btn-upload-logo" onclick="document.getElementById('logoInput').click()">
+                                    <i class="bi bi-upload"></i> Unggah logo
+                                </button>
+                                <div class="logo-upload-hint">PNG / JPG • maksimal 2 MB. Logo sederhana agar cetak tetap jelas.</div>
+                            </div>
+                        </div>
+
+                        <form id="profileForm" novalidate>
+                            <div class="form-group-custom">
+                                <label class="form-label-custom" for="namaUsaha">
+                                    Nama usaha <span class="required">*</span>
+                                </label>
+                                <input type="text" id="namaUsaha" class="form-input" placeholder="Masukkan nama usaha" />
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom" for="jenisUsaha">Jenis usaha</label>
+                                <select id="jenisUsaha" class="form-input form-select-custom">
+                                    <option value="" disabled selected>Pilih jenis usaha</option>
+                                    <option value="Kafe">Kafe</option>
+                                    <option value="Restoran">Restoran</option>
+                                    <option value="Kedai Minuman">Kedai Minuman</option>
+                                    <option value="Bakery / Roti">Bakery / Roti</option>
+                                    <option value="Retail">Retail</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom" for="alamatUsaha">
+                                    Alamat usaha <span class="required">*</span>
+                                </label>
+                                <input type="text" id="alamatUsaha" class="form-input" placeholder="Masukkan alamat usaha" />
+                            </div>
+
+                            <div class="form-row">
+                                <div>
+                                    <label class="form-label-custom" for="teleponUsaha">
+                                        Nomor HP usaha <span class="required">*</span>
+                                    </label>
+                                    <input type="text" id="teleponUsaha" class="form-input" placeholder="08xxxxxxxxxx" />
+                                </div>
+                                <div>
+                                    <label class="form-label-custom" for="emailUsaha">Email usaha</label>
+                                    <input type="email" id="emailUsaha" class="form-input" placeholder="email@usaha.com" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+                        <button type="button" id="btnSimpanProfil" class="btn-simpan-profil">
+                            <i class="bi bi-check-lg"></i> Simpan profil usaha
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="profile-card">
+                        <div class="profile-card-title" style="margin-bottom:24px;">Pratinjau kepala struk</div>
+                        <div class="profile-card-sub">Informasi yang dilihat pelanggan.</div>
+
+                        <div class="receipt-preview-box">
+                            <div class="receipt-preview-icon" id="previewLogoCircle">
+                                <i class="bi bi-cup-hot" id="previewLogoIcon"></i>
+                            </div>
+                            <div class="receipt-preview-name" id="previewNamaUsaha">-</div>
+                            <div class="receipt-preview-address" id="previewAlamatUsaha">-</div>
+                            <div class="receipt-preview-phone" id="previewTeleponUsaha">-</div>
+                            <div class="receipt-preview-divider"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <script>
+            let currentProfile = getCompanyProfile();
+            let currentLogoData = currentProfile.logo;
+
+            const inputNama = document.getElementById('namaUsaha');
+            const selectJenis = document.getElementById('jenisUsaha');
+            const inputAlamat = document.getElementById('alamatUsaha');
+            const inputTelepon = document.getElementById('teleponUsaha');
+            const inputEmail = document.getElementById('emailUsaha');
+            const inputLogo = document.getElementById('logoInput');
+
+            const prevNama = document.getElementById('previewNamaUsaha');
+            const prevAlamat = document.getElementById('previewAlamatUsaha');
+            const prevTelepon = document.getElementById('previewTeleponUsaha');
+            const formLogoCircle = document.getElementById('formLogoCircle');
+            const prevLogoCircle = document.getElementById('previewLogoCircle');
+
+            const sidebarName = document.getElementById('sidebarBusinessName');
+            const sidebarType = document.getElementById('sidebarBusinessType');
+
+            function applyLogo(logoUrl) {
+                if (logoUrl) {
+                    formLogoCircle.innerHTML = `<img src="${logoUrl}" alt="Logo" />`;
+                    prevLogoCircle.innerHTML = `<img src="${logoUrl}" alt="Logo" />`;
+                } else {
+                    formLogoCircle.innerHTML = `<i class="bi bi-cup-hot"></i>`;
+                    prevLogoCircle.innerHTML = `<i class="bi bi-cup-hot"></i>`;
+                }
+            }
+
+            function populateForm() {
+                inputNama.value = currentProfile.name || '';
+                selectJenis.value = currentProfile.type || '';
+                inputAlamat.value = currentProfile.address || '';
+                inputTelepon.value = currentProfile.phone || '';
+                inputEmail.value = currentProfile.email || '';
+
+                prevNama.textContent = currentProfile.name || '-';
+                prevAlamat.textContent = currentProfile.address || '-';
+                prevTelepon.textContent = currentProfile.phone || '-';
+
+                sidebarName.textContent = currentProfile.name || '';
+                sidebarType.textContent = currentProfile.type ? `Usaha ${currentProfile.type.toLowerCase()}` : '';
+
+                applyLogo(currentProfile.logo);
+            }
+
+            inputNama.addEventListener('input', () => {
+                const val = inputNama.value.trim();
+                prevNama.textContent = val || '-';
+                sidebarName.textContent = val;
+            });
+
+            selectJenis.addEventListener('change', () => {
+                sidebarType.textContent = selectJenis.value ? `Usaha ${selectJenis.value.toLowerCase()}` : '';
+            });
+
+            inputAlamat.addEventListener('input', () => {
+                prevAlamat.textContent = inputAlamat.value.trim() || '-';
+            });
+
+            inputTelepon.addEventListener('input', () => {
+                prevTelepon.textContent = inputTelepon.value.trim() || '-';
+            });
+
+            inputLogo.addEventListener('change', function () {
+                const file = this.files[0];
+                if (!file) return;
+
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Ukuran file maksimal 2 MB.');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = e => {
+                    currentLogoData = e.target.result;
+                    applyLogo(currentLogoData);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('btnSimpanProfil').addEventListener('click', () => {
+                const nama = inputNama.value.trim();
+                const alamat = inputAlamat.value.trim();
+                const telepon = inputTelepon.value.trim();
+                const jenis = selectJenis.value;
+                const email = inputEmail.value.trim();
+
+                if (!nama) {
+                    alert('Nama usaha wajib diisi.');
+                    inputNama.focus();
+                    return;
+                }
+                if (!alamat) {
+                    alert('Alamat usaha wajib diisi.');
+                    inputAlamat.focus();
+                    return;
+                }
+                if (!telepon) {
+                    alert('Nomor HP usaha wajib diisi.');
+                    inputTelepon.focus();
+                    return;
+                }
+
+                const updated = {
+                    name: nama,
+                    type: jenis,
+                    address: alamat,
+                    phone: telepon,
+                    email: email,
+                    logo: currentLogoData
+                };
+
+                saveProfile(updated);
+                currentProfile = updated;
+
+                sidebarName.textContent = nama;
+                sidebarType.textContent = `Usaha ${jenis.toLowerCase()}`;
+
+                alert('Profil usaha berhasil disimpan!');
+            });
+
+            populateForm();
+        </script>
+
+    </body>
+</html>

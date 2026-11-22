@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Detail Transaksi — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/addProductStyle.css" rel="stylesheet" />
+        <link href="css/trxDetailStyle.css" rel="stylesheet" />
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                <i class="bi bi-bell topbar-bell"></i>
+                <div class="topbar-user">
+                    <span class="topbar-avatar">D</span>
+                    <div class="topbar-user-info">
+                        <span class="topbar-user-name">Damar</span>
+                    </div>
+                    <i class="bi bi-chevron-down" style="font-size:0.7rem; color:#6b7280;"></i>
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+                <i class="bi bi-chevron-down sidebar-business-chevron"></i>
+            </div>
+
+            <a href="dashboard.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products.html" class="nav-item">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier.html" class="nav-item">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="report.html" class="nav-item active">
+                <i class="bi bi-graph-up"></i> Laporan
+            </a>
+            <a href="stock.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="bi bi-gear"></i> Profil
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Detail transaksi</h1>
+                <a href="report.html" class="btn-back-report">
+                    <i class="bi bi-arrow-left"></i> Kembali ke laporan
+                </a>
+            </div>
+
+            <div class="trx-meta-card">
+                <div class="trx-meta-title" id="trxId">SJ-121026-0043</div>
+                <div class="trx-meta-subtitle" id="trxOrder">Pesanan #0043</div>
+
+                <div class="trx-meta-grid">
+                    <div>
+                        <div class="trx-meta-row" style="margin-bottom: 12px;">
+                            <span class="trx-meta-label">Tanggal</span>
+                            <span class="trx-meta-val" id="trxDate">12 Oktober 2026</span>
+                        </div>
+                        <div class="trx-meta-row" style="margin-bottom: 12px;">
+                            <span class="trx-meta-label">Waktu pembayaran</span>
+                            <span class="trx-meta-val" id="trxTime">13.42 WIB</span>
+                        </div>
+                        <div class="trx-meta-row">
+                            <span class="trx-meta-label">Kasir</span>
+                            <span class="trx-meta-val" id="trxCashier">Rosy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trx-detail-layout">
+
+                <div class="trx-detail-left">
+
+                    <div class="card-box" style="padding: 0; overflow: hidden;">
+                        <div style="padding: 20px 20px 10px;">
+                            <div class="card-box-title">Produk yang dibeli</div>
+                        </div>
+
+                        <div style="overflow-x: auto;">
+                            <table class="items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Jumlah</th>
+                                        <th>Harga satuan</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsBody">
+                                    <tr>
+                                        <td class="item-name-cell">Kopi Susu</td>
+                                        <td>2 gelas</td>
+                                        <td>Rp25.000</td>
+                                        <td>Rp50.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="item-name-cell">Roti Bakar</td>
+                                        <td>1 porsi</td>
+                                        <td>Rp25.000</td>
+                                        <td>Rp25.000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="padding: 16px 0 6px;">
+                            <div class="trx-calc-row">
+                                <span class="trx-calc-label">Subtotal</span>
+                                <span class="trx-calc-val" id="subtotalVal">Rp75.000</span>
+                            </div>
+                            <div class="trx-calc-row">
+                                <span class="trx-calc-label">Pajak / biaya</span>
+                                <span class="trx-calc-val" id="taxVal">Rp0</span>
+                            </div>
+                            <div class="trx-total-row">
+                                <span class="total-label">Total transaksi</span>
+                                <span class="total-val" id="totalVal">Rp75.000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-box">
+                        <div class="card-box-title" style="margin-bottom: 14px;">Catatan pesanan</div>
+                        <div class="notes-text" id="orderNotes">
+                            Kopi susu tanpa es untuk 1 gelas.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="trx-detail-right">
+
+                    <div class="card-box">
+                        <div class="card-box-title" style="margin-bottom: 12px;">Informasi pembayaran</div>
+                        <div>
+                            <span class="payment-method-badge" id="paymentMethodBadge">Tunai</span>
+                        </div>
+                        <div class="pay-total-row">
+                            <span class="pay-total-label">Total</span>
+                            <span class="pay-total-val" id="payTotalVal">Rp75.000</span>
+                        </div>
+                        <div class="pay-info-row" id="receivedRow">
+                            <span class="pay-info-label">Uang diterima</span>
+                            <span class="pay-info-val" id="receivedVal">Rp100.000</span>
+                        </div>
+                        <div class="pay-info-row" id="changeRow">
+                            <span class="pay-info-label">Kembalian</span>
+                            <span class="pay-info-val" id="changeVal">Rp25.000</span>
+                        </div>
+                    </div>
+
+                    <div class="card-box">
+                        <div class="card-box-title" style="margin-bottom: 14px;">Struk transaksi</div>
+                        <div class="struk-brand-name">Kafe IMKafe</div>
+                        <div class="struk-meta-text">Jl. Melati No. 18, Bandung</div>
+
+        <script src="js/transaction.js"></script>
+        <script>
+            const params = new URLSearchParams(window.location.search);
+            const reqId = params.get('id');
+            const data = (reqId && getTransactionById(reqId)) || getTransactions()[0];
+
+            if (data) {
+                document.getElementById('trxId').textContent = data.id;
+                document.getElementById('trxOrder').textContent = data.order || `Pesanan #${data.id}`;
+                document.getElementById('trxDate').textContent = data.date;
+                document.getElementById('trxTime').textContent = data.time;
+                document.getElementById('trxCashier').textContent = data.cashier || 'Rosy';
+                document.getElementById('trxStatus').textContent = data.status || 'Berhasil';
+
+                const subtotalFormatted = typeof data.subtotal === 'number' ? formatHarga(data.subtotal) : data.subtotal;
+                const taxFormatted = typeof data.tax === 'number' ? formatHarga(data.tax) : (data.tax || 'Rp0');
+                const totalFormatted = typeof data.total === 'number' ? formatHarga(data.total) : data.total;
+                const receivedFormatted = typeof data.received === 'number' ? formatHarga(data.received) : (data.received || totalFormatted);
+                const changeFormatted = typeof data.change === 'number' ? formatHarga(data.change) : (data.change || 'Rp0');
+
+                document.getElementById('subtotalVal').textContent = subtotalFormatted;
+                document.getElementById('taxVal').textContent = taxFormatted;
+                document.getElementById('totalVal').textContent = totalFormatted;
+                document.getElementById('payTotalVal').textContent = totalFormatted;
+
+                document.getElementById('paymentMethodBadge').textContent = data.method;
+                document.getElementById('receivedVal').textContent = receivedFormatted;
+                document.getElementById('changeVal').textContent = changeFormatted;
+                document.getElementById('orderNotes').textContent = data.notes || '—';
+
+                const tbody = document.getElementById('itemsBody');
+                tbody.innerHTML = (data.items || []).map(item => {
+                    const priceFmt = typeof item.price === 'number' ? formatHarga(item.price) : item.price;
+                    const subtotalFmt = typeof item.subtotal === 'number' ? formatHarga(item.subtotal) : item.subtotal;
+                    const qtyFmt = typeof item.qty === 'number' ? `${item.qty} ${item.unit || 'pcs'}` : item.qty;
+
+                    return `
+                        <tr>
+                            <td class="item-name-cell">${item.name}</td>
+                            <td>${qtyFmt}</td>
+                            <td>${priceFmt}</td>
+                            <td>${subtotalFmt}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            document.getElementById('btnCopyLink').addEventListener('click', () => {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link struk berhasil disalin!');
+                }).catch(() => {
+                    alert('Gagal menyalin link.');
+                });
+            });
+        </script>
+
+    </body>
+</html>

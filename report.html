@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Laporan Penjualan — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/addProductStyle.css" rel="stylesheet" />
+        <link href="css/reportStyle.css" rel="stylesheet" />
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                
+                <div class="topbar-user">
+                    <span class="topbar-avatar">D</span>
+                    <div class="topbar-user-info">
+                        <span class="topbar-user-name">Damar</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products.html" class="nav-item">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier.html" class="nav-item">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="report.html" class="nav-item active">
+                <i class="bi bi-graph-up"></i> Laporan
+            </a>
+            <a href="stock.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="bi bi-gear"></i> Profil
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Laporan penjualan</h1>
+            </div>
+
+            <div class="report-filter-bar">
+                <div class="date-filters">
+                    <div class="date-input-group">
+                        <span class="date-label">Dari tanggal</span>
+                        <div class="date-input-box" id="startDateBox">
+                            <span id="startDateLabel">-</span>
+                            <i class="bi bi-calendar3"></i>
+                            <input type="date" id="startDateInput" class="date-input-native" />
+                        </div>
+                    </div>
+                    <div class="date-input-group">
+                        <span class="date-label">Sampai tanggal</span>
+                        <div class="date-input-box" id="endDateBox">
+                            <span id="endDateLabel">-</span>
+                            <i class="bi bi-calendar3"></i>
+                            <input type="date" id="endDateInput" class="date-input-native" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn-export" id="btnExportReport">
+                        <i class="bi bi-download"></i> Ekspor laporan XLSX
+                    </button>
+                </div>
+            </div>
+
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-label">Total penjualan</div>
+                    <div class="stat-value" id="reportTotalSales">Rp0</div>
+                    <div class="stat-subtext" id="reportTunaiQrisSub">Tunai Rp0 • QRIS Rp0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Jumlah transaksi</div>
+                    <div class="stat-value" id="reportTrxCount">0</div>
+                    <div class="stat-subtext" id="reportAvgPerTrx">Rata-rata Rp0 per transaksi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Produk terjual</div>
+                    <div class="stat-value" id="reportTotalItem">0 item</div>
+                    <div class="stat-subtext" id="reportItemsMeta">0 jenis produk • 0 item per transaksi</div>
+                </div>
+            </div>
+
+            <div class="dashboard-cols" style="grid-template-columns: 1fr 340px;">
+                <div class="card-box">
+                    <div class="card-box-title">Penjualan per jam</div>
+                    <div class="card-box-sub" id="reportChartDate"></div>
+                    <div class="chart-wrap" style="height: 220px;">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                    <div class="chart-footer" id="reportChartFooter">-</div>
+                </div>
+
+                <div class="card-box" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="card-box-title" style="margin-bottom: 16px;">Produk terlaris</div>
+                        <div id="reportTopProductsList"></div>
+                    </div>
+
+                    <div class="terlaris-total-row">
+                        <span class="total-label" id="reportTopTotalItems">Total • 0 item</span>
+                        <span class="total-amount" id="reportTopTotalAmount">Rp0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-box trx-card">
+                <div class="card-box-title">Riwayat transaksi</div>
+                <div class="card-box-sub" id="reportTrxMetaSub" style="margin-bottom: 16px;"></div>
+
+                <div style="overflow-x: auto;">
+                    <table class="trx-table">
+                        <thead>
+                            <tr>
+                                <th>ID transaksi</th>
+                                <th>Waktu</th>
+                                <th>Kasir</th>
+                                <th>Metode</th>
+                                <th>Status</th>
+                                <th>Total / kontribusi</th>
+                                <th>Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTrxTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="trx-table-footer">
+                    <span id="reportTrxCountFooter">Menampilkan 0 dari 0 transaksi</span>
+                    <span class="total-val" id="reportTrxTotalFooter">Total Rp0</span>
+                </div>
+            </div>
+
+        </main>
+
+        <script src="js/transaction.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+        <script>
+            function getTrxISODate(t) {
+                if (t.isoDate) return t.isoDate;
+                if (t.id && t.id.startsWith('SJ-')) {
+                    const parts = t.id.split('-');
+                    if (parts[1] && parts[1].length === 6) {
+                        const d = parts[1].slice(0, 2);
+                        const m = parts[1].slice(2, 4);
+                        const y = '20' + parts[1].slice(4, 6);
+                        return `${y}-${m}-${d}`;
+                    }
+                }
+                if (t.date) {
+                    const months = {
+                        'januari': '01', 'jan': '01',
+                        'februari': '02', 'feb': '02',
+                        'maret': '03', 'mar': '03',
+                        'april': '04', 'apr': '04',
+                        'mei': '05', 'may': '05',
+                        'juni': '06', 'jun': '06',
+                        'juli': '07', 'jul': '07',
+                        'agustus': '08', 'agu': '08', 'agt': '08',
+                        'september': '09', 'sep': '09',
+                        'oktober': '10', 'okt': '10',
+                        'november': '11', 'nov': '11',
+                        'desember': '12', 'des': '12'
+                    };
+                    const parts = t.date.trim().toLowerCase().split(/\s+/);
+                    if (parts.length >= 3) {
+                        const d = parts[0].padStart(2, '0');
+                        const m = months[parts[1]] || '01';
+                        const y = parts[2];
+                        return `${y}-${m}-${d}`;
+                    }
+                }
+                return '';
+            }
+
+            function formatIndoDate(isoString) {
+                if (!isoString) return '';
+                const parts = isoString.split('-');
+                if (parts.length < 3) return isoString;
+                const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+                return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            }
+
+            function getTodayISO() {
+                const now = new Date();
+                const y = now.getFullYear();
+                const m = String(now.getMonth() + 1).padStart(2, '0');
+                const d = String(now.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+
+            let currentHourRange = 'all';
+            let currentChartType = 'bar';
+
+            function getRangeHours(range) {
+                if (range === 'pagi') {
+                    return ['06.00', '07.00', '08.00', '09.00', '10.00', '11.00', '12.00'];
+                }
+                if (range === 'siang') {
+                    return ['12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00'];
+                }
+                if (range === 'malam') {
+                    return ['18.00', '19.00', '20.00', '21.00', '22.00', '23.00'];
+                }
+                if (range === 'dini') {
+                    return ['00.00', '01.00', '02.00', '03.00', '04.00', '05.00', '06.00'];
+                }
+                return Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0') + '.00');
+            }
+
+            const startInput = document.getElementById('startDateInput');
+            const endInput = document.getElementById('endDateInput');
+            const startLabel = document.getElementById('startDateLabel');
+            const endLabel = document.getElementById('endDateLabel');
+            const startBox = document.getElementById('startDateBox');
+            const endBox = document.getElementById('endDateBox');
+
+            const allTransactions = getTransactions();
+
+            let initialStart = getTodayISO();
+            let initialEnd = getTodayISO();
+
+            if (allTransactions.length > 0) {
+                const dates = allTransactions.map(t => getTrxISODate(t)).filter(Boolean).sort();
+                if (dates.length > 0) {
+                    initialStart = dates[0];
+                    initialEnd = dates[dates.length - 1];
+                }
+            }
+
+            startInput.value = initialStart;
+            endInput.value = initialEnd;
+            startLabel.textContent = formatIndoDate(initialStart);
+            endLabel.textContent = formatIndoDate(initialEnd);
+
+            let chartInstance = null;
+
+            function renderReport() {
+                const startDate = startInput.value;
+                const endDate = endInput.value;
+
+                startLabel.textContent = formatIndoDate(startDate);
+                endLabel.textContent = formatIndoDate(endDate);
+
+                const transactions = allTransactions.filter(t => {
+                    const d = getTrxISODate(t);
+                    if (!d) return true;
+                    if (startDate && d < startDate) return false;
+                    if (endDate && d > endDate) return false;
+                    return true;
+                });
+
+                const stats = getTransactionStats(transactions);
+
+                document.getElementById('reportTotalSales').textContent = formatHarga(stats.totalPenjualan);
+                document.getElementById('reportTunaiQrisSub').textContent =
+                    `Tunai ${formatHarga(stats.tunaiTotal)} • QRIS ${formatHarga(stats.qrisTotal)}`;
+                document.getElementById('reportTrxCount').textContent = stats.totalTransaksi;
+                document.getElementById('reportAvgPerTrx').textContent =
+                    `Rata-rata ${formatHarga(stats.avgPerTrx)} per transaksi`;
+                document.getElementById('reportTotalItem').textContent = `${stats.totalItem} item`;
+                document.getElementById('reportItemsMeta').textContent =
+                    `${stats.topProducts.length} jenis produk • ${stats.avgItemsPerTrx} item per transaksi`;
+
+                const topListEl = document.getElementById('reportTopProductsList');
+                if (stats.topProducts.length === 0) {
+                    topListEl.innerHTML = `<div class="text-secondary py-3 text-center" style="font-size:0.8125rem;">Belum ada data penjualan pada rentang tanggal ini.</div>`;
+                } else {
+                    topListEl.innerHTML = stats.topProducts.slice(0, 3).map((p, idx) => {
+                        const pct = stats.totalPenjualan > 0 ? ((p.revenue / stats.totalPenjualan) * 100).toFixed(1) : 0;
+                        return `
+                            <div class="terlaris-item">
+                                <div class="terlaris-left">
+                                    <span class="terlaris-index">${idx + 1}.</span>
+                                    <div>
+                                        <div class="terlaris-name">${p.name}</div>
+                                        <div class="terlaris-meta">${formatHarga(p.revenue)} • ${pct}% dari penjualan</div>
+                                    </div>
+                                </div>
+                                <div class="terlaris-qty">${p.qty} ${p.unit}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                document.getElementById('reportTopTotalItems').textContent = `Total • ${stats.totalItem} item`;
+                document.getElementById('reportTopTotalAmount').textContent = formatHarga(stats.totalPenjualan);
+
+                const dateRangeText = startDate === endDate
+                    ? formatIndoDate(startDate)
+                    : `${formatIndoDate(startDate)} – ${formatIndoDate(endDate)}`;
+
+                document.getElementById('reportChartDate').textContent = dateRangeText;
+                document.getElementById('reportTrxMetaSub').textContent =
+                    `${dateRangeText} • Kasir Damar • Tunai: ${stats.tunaiCount} transaksi / ${formatHarga(stats.tunaiTotal)} • QRIS: ${stats.qrisCount} transaksi / ${formatHarga(stats.qrisTotal)}`;
+
+                const tbody = document.getElementById('reportTrxTableBody');
+                if (transactions.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-secondary">Tidak ada transaksi ditemukan pada rentang tanggal ini.</td></tr>`;
+                } else {
+                    tbody.innerHTML = transactions.map(t => {
+                        const pct = stats.totalPenjualan > 0 ? ((Number(t.total) / stats.totalPenjualan) * 100).toFixed(1) : 0;
+                        return `
+                            <tr>
+                                <td>
+                                    <div class="trx-main-id">${t.id}</div>
+                                    <div class="trx-sub-date">${t.date}</div>
+                                </td>
+                                <td>${(t.time || '').replace(' WIB', '')}</td>
+                                <td>${t.cashier || 'Damar'}</td>
+                                <td>${t.method}</td>
+                                <td><span class="badge-berhasil">${t.status || 'Berhasil'}</span></td>
+                                <td>
+                                    <div class="trx-amount-box">
+                                        <div class="main-amount">${formatHarga(t.total)}</div>
+                                        <div class="sub-pct">${pct}% dari total</div>
+                                    </div>
+                                </td>
+                                <td><a href="transaction-detail.html?id=${t.id}" class="btn-detail-link">Detail →</a></td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+
+                document.getElementById('reportTrxCountFooter').textContent =
+                    `Menampilkan ${transactions.length} dari ${transactions.length} transaksi`;
+                document.getElementById('reportTrxTotalFooter').textContent =
+                    `Total ${formatHarga(stats.totalPenjualan)}`;
+
+                const hours = getRangeHours(currentHourRange);
+                const values = hours.map(h => stats.hourlyMap[h] || 0);
+                const maxVal = Math.max(...values, 1);
+
+                if (currentHourRange === 'all') {
+                    if (stats.totalTransaksi === 0) {
+                        document.getElementById('reportChartFooter').textContent = 'Belum ada data transaksi pada rentang tanggal ini.';
+                    } else {
+                        document.getElementById('reportChartFooter').textContent =
+                            `Puncak 24 jam: ${stats.peakHour} • ${formatHarga(stats.peakAmount)} • ${stats.peakPct}% dari total penjualan`;
+                    }
+                } else {
+                    let slotPeakHour = hours[0];
+                    let slotPeakAmt = 0;
+                    let slotTotal = 0;
+                    hours.forEach(h => {
+                        const a = stats.hourlyMap[h] || 0;
+                        slotTotal += a;
+                        if (a > slotPeakAmt) {
+                            slotPeakAmt = a;
+                            slotPeakHour = h;
+                        }
+                    });
+                    if (slotTotal === 0) {
+                        document.getElementById('reportChartFooter').textContent = 'Belum ada data penjualan pada sesi ini.';
+                    } else {
+                        document.getElementById('reportChartFooter').textContent =
+                            `Puncak sesi: ${slotPeakHour} (${formatHarga(slotPeakAmt)}) • Total sesi: ${formatHarga(slotTotal)}`;
+                    }
+                }
+
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                const ctxCanvas = document.getElementById('salesChart');
+                let chartDataset = {};
+
+                if (currentChartType === 'line') {
+                    chartDataset = {
+                        data: values,
+                        borderColor: '#8c3815',
+                        backgroundColor: 'rgba(140, 56, 21, 0.08)',
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: '#8c3815',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        borderWidth: 2
+                    };
+                } else {
+                    const colors = values.map(v => v === maxVal && v > 0 ? '#7d2e0e' : v > 0 ? '#f5ede9' : 'transparent');
+                    const borderColors = values.map(v => v === maxVal && v > 0 ? '#7d2e0e' : v > 0 ? '#e8c8ba' : 'transparent');
+                    chartDataset = {
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: borderColors,
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        borderSkipped: false
+                    };
+                }
+
+                chartInstance = new Chart(ctxCanvas, {
+                    type: currentChartType,
+                    data: {
+                        labels: hours,
+                        datasets: [chartDataset]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: { padding: { top: 24 } },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => ctx.parsed.y > 0 ? 'Rp' + (ctx.parsed.y / 1000) + ' rb' : '—'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                border: { display: false },
+                                ticks: {
+                                    font: { size: 10, family: 'Inter' },
+                                    color: '#9ca3af',
+                                    autoSkip: false,
+                                    callback: function(val, index) {
+                                        if (currentHourRange !== 'all') return this.getLabelForValue(val);
+                                        return (index % 3 === 0 || index === 23) ? this.getLabelForValue(val) : '';
+                                    }
+                                }
+                            },
+                            y: {
+                                display: false,
+                                beginAtZero: true,
+                                suggestedMax: maxVal > 0 ? maxVal * 1.18 : 1000
+                            }
+                        }
+                    },
+                    plugins: [{
+                        id: 'valueLabels',
+                        afterDatasetsDraw(chart) {
+                            if (currentChartType === 'line') return;
+                            const { ctx, data, scales: { x, y } } = chart;
+                            ctx.save();
+                            ctx.font = '500 10px Inter';
+                            ctx.fillStyle = '#6b7280';
+                            ctx.textAlign = 'center';
+                            data.datasets[0].data.forEach((val, i) => {
+                                const xPos = x.getPixelForValue(i);
+                                if (val > 0) {
+                                    const yPos = y.getPixelForValue(val) - 8;
+                                    ctx.fillText((val / 1000) + ' rb', xPos, yPos);
+                                } else if (currentHourRange !== 'all') {
+                                    const yPos = y.getPixelForValue(0) - 8;
+                                    ctx.fillText('—', xPos, yPos);
+                                }
+                            });
+                            ctx.restore();
+                        }
+                    }]
+                });
+            }
+
+            document.querySelectorAll('.hour-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.hour-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentHourRange = tab.dataset.range;
+                    renderReport();
+                });
+            });
+
+            document.querySelectorAll('.chart-type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.chart-type-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentChartType = btn.dataset.type;
+                    renderReport();
+                });
+            });
+
+            startInput.addEventListener('change', () => {
+                if (endInput.value && startInput.value > endInput.value) {
+                    endInput.value = startInput.value;
+                }
+                renderReport();
+            });
+
+            endInput.addEventListener('change', () => {
+                if (startInput.value && endInput.value < startInput.value) {
+                    startInput.value = endInput.value;
+                }
+                renderReport();
+            });
+
+            startBox.addEventListener('click', () => {
+                if (startInput.showPicker) startInput.showPicker();
+            });
+
+            endBox.addEventListener('click', () => {
+                if (endInput.showPicker) endInput.showPicker();
+            });
+
+            document.getElementById('btnExportReport').addEventListener('click', () => {
+                const s = startLabel.textContent;
+                const e = endLabel.textContent;
+                alert(`Ekspor laporan periode ${s} – ${e} berhasil dimulai.`);
+            });
+
+            renderReport();
+        </script>
+
+    </body>
+</html>

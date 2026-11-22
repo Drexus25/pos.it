@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Pembayaran — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/trxDetailStyle.css" rel="stylesheet" />
+        <link href="css/paymentStyle.css" rel="stylesheet" />
+        <script src="js/productsData.js"></script>
+        <script src="js/transaction.js"></script>
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                <div class="topbar-user">
+                    <span class="topbar-avatar">R</span>
+                    Rosy
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard-cashier.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products-cashier.html" class="nav-item">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier-cashier.html" class="nav-item active">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="stock-cashier.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Pembayaran</h1>
+                <a href="cashier-cashier.html" class="btn-back-report">
+                    <i class="bi bi-arrow-left"></i> Kembali ke pesanan
+                </a>
+            </div>
+
+            <div class="payment-layout">
+
+                <div class="payment-card">
+                    <div class="payment-card-title">Ringkasan pesanan</div>
+                    <div class="payment-card-subtitle" id="orderMetaSummary">-</div>
+
+                    <div id="summaryItemsList"></div>
+
+                    <div class="order-calc-section">
+                        <div class="order-calc-row">
+                            <span>Subtotal</span>
+                            <span id="summarySubtotal">Rp0</span>
+                        </div>
+                        <div class="order-calc-row">
+                            <span>Pajak / biaya tambahan</span>
+                            <span id="summaryTax">Rp0</span>
+                        </div>
+                        <div class="order-calc-total">
+                            <span class="order-calc-total-label">Total pembayaran</span>
+                            <span class="order-calc-total-val" id="summaryTotal">Rp0</span>
+                        </div>
+                    </div>
+
+                    <div class="order-notes-display" id="summaryNotesBlock" style="display:none;">
+                        <span class="notes-label">Catatan:</span>
+                        <span id="summaryNotesText"></span>
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <div class="payment-card-title">Pilih metode pembayaran</div>
+
+                    <div class="method-toggle-group">
+                        <button type="button" class="method-tab active" data-method="Tunai">Tunai</button>
+                        <button type="button" class="method-tab" data-method="QRIS">QRIS</button>
+                    </div>
+
+                    <div id="tunaiSection">
+                        <div class="tunai-total-block">
+                            <span class="tunai-total-label">Total yang harus dibayar</span>
+                            <div class="tunai-total-row">
+                                <span class="tunai-total-amount" id="tunaiTotalDisplay">Rp0</span>
+                                <div class="cash-icon-pill">
+                                    <i class="bi bi-cash-stack"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cash-input-group">
+                            <label class="cash-input-label" for="inputCash">Uang diterima *</label>
+                            <input type="text" id="inputCash" class="cash-input" placeholder="Rp0" />
+                            <span class="cash-input-hint">Masukkan nominal uang tunai dari pelanggan.</span>
+                        </div>
+
+                        <div class="quick-cash-row">
+                            <button type="button" class="btn-quick-cash" id="btnExactCash">Uang pas</button>
+                            <button type="button" class="btn-quick-cash" id="btnCash1"></button>
+                            <button type="button" class="btn-quick-cash" id="btnCash2"></button>
+                        </div>
+
+                        <div class="change-box">
+                            <span class="change-label">Kembalian</span>
+                            <span class="change-val" id="changeAmount">Rp0</span>
+                        </div>
+
+                        <div class="info-alert-box">
+                            <i class="bi bi-info-circle"></i>
+                            <div>
+                                <div class="info-alert-title">Periksa nominal sebelum konfirmasi</div>
+                                <div class="info-alert-desc" id="tunaiAlertDesc">
+                                    Jika uang diterima kurang, pembayaran tidak dapat dikonfirmasi. Lengkapi nominal atau pilih metode lain.
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-confirm-pay" id="btnSubmitTunai" disabled>
+                            <i class="bi bi-check-circle"></i> Konfirmasi pembayaran
+                        </button>
+                    </div>
+
+                    <div id="qrisSection" style="display:none;">
+                        <div class="qris-center-wrap">
+                            <div class="qris-amount-display" id="qrisTotalDisplay">Rp0</div>
+                            <span class="qris-badge-waiting">Menunggu konfirmasi pembayaran</span>
+
+                            <div class="qr-code-frame">
+                                <div class="qr-corner-tl"></div>
+                                <div class="qr-corner-tr"></div>
+                                <div class="qr-corner-bl"></div>
+                                <div class="qr-corner-br"></div>
+                                <svg class="qr-svg" viewBox="0 0 100 100" fill="#111827">
+                                    <rect x="5" y="5" width="28" height="28" rx="2" fill="none" stroke="#111827" stroke-width="6"/>
+                                    <rect x="13" y="13" width="12" height="12" fill="#111827"/>
+                                    <rect x="67" y="5" width="28" height="28" rx="2" fill="none" stroke="#111827" stroke-width="6"/>
+                                    <rect x="75" y="13" width="12" height="12" fill="#111827"/>
+                                    <rect x="5" y="67" width="28" height="28" rx="2" fill="none" stroke="#111827" stroke-width="6"/>
+                                    <rect x="13" y="75" width="12" height="12" fill="#111827"/>
+                                    <rect x="42" y="10" width="8" height="8"/>
+                                    <rect x="42" y="24" width="8" height="12"/>
+                                    <rect x="54" y="16" width="8" height="14"/>
+                                    <rect x="10" y="42" width="10" height="8"/>
+                                    <rect x="25" y="42" width="12" height="8"/>
+                                    <rect x="10" y="54" width="8" height="8"/>
+                                    <rect x="24" y="54" width="12" height="8"/>
+                                    <rect x="42" y="42" width="16" height="16" fill="#c0421a"/>
+                                    <text x="50" y="53" font-size="6" font-family="Inter,sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">DEMO</text>
+                                    <rect x="68" y="42" width="8" height="8"/>
+                                    <rect x="82" y="42" width="8" height="14"/>
+                                    <rect x="74" y="52" width="10" height="8"/>
+                                    <rect x="42" y="68" width="8" height="10"/>
+                                    <rect x="42" y="82" width="14" height="8"/>
+                                    <rect x="54" y="74" width="10" height="14"/>
+                                    <rect x="68" y="68" width="12" height="8"/>
+                                    <rect x="84" y="68" width="6" height="14"/>
+                                    <rect x="68" y="82" width="10" height="8"/>
+                                    <rect x="82" y="86" width="8" height="8"/>
+                                </svg>
+                            </div>
+
+                            <div class="qris-expiry-text" id="qrisExpiryText">Berlaku sampai 13.43 • 12 Oktober 2026</div>
+
+                            <button type="button" class="btn-reload-qr" id="btnReloadQr">
+                                <i class="bi bi-arrow-repeat"></i> Tampilkan ulang QR
+                            </button>
+                        </div>
+
+                        <div class="info-alert-box" style="margin-top:20px;">
+                            <i class="bi bi-info-circle"></i>
+                            <div>
+                                <div class="info-alert-title">Jangan tutup halaman sebelum status berubah</div>
+                                <div class="info-alert-desc">
+                                    Pembayaran dinyatakan berhasil setelah ada konfirmasi. Pesanan belum dicatat sebagai transaksi berhasil dan stok belum dikurangi.
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-confirm-pay" id="btnSubmitQris" style="margin-top:16px;">
+                            <i class="bi bi-check2-circle"></i> Simulasi Bayar QRIS Sukses
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+        <script>
+            let currentOrder = null;
+            try {
+                const stored = sessionStorage.getItem('posit_current_order');
+                if (stored) {
+                    currentOrder = JSON.parse(stored);
+                }
+            } catch (e) {}
+
+            if (!currentOrder || !currentOrder.items || currentOrder.items.length === 0) {
+                const defaultProds = typeof getProducts === 'function' ? getProducts() : [];
+                const p1 = defaultProds[0] || { id: 1, nama: 'Kopi Susu Gula Aren', harga: 18000, stok: 10 };
+                const p2 = defaultProds[1] || { id: 2, nama: 'Croissant Butter', harga: 22000, stok: 5 };
+                currentOrder = {
+                    orderSeq: 'Pesanan #014',
+                    orderNo: 'TRX-SAMPLE',
+                    items: [
+                        { id: p1.id, nama: p1.nama, harga: p1.harga, qty: 2, image: p1.gambar || '' },
+                        { id: p2.id, nama: p2.nama, harga: p2.harga, qty: 1, image: p2.gambar || '' }
+                    ],
+                    subtotal: (p1.harga * 2) + p2.harga,
+                    tax: 0,
+                    total: (p1.harga * 2) + p2.harga,
+                    notes: ''
+                };
+            }
+
+            let selectedMethod = 'Tunai';
+
+            function renderOrderSummary() {
+                const subtotal = currentOrder.subtotal || currentOrder.items.reduce((s, i) => s + (i.harga * i.qty), 0);
+                const tax = currentOrder.tax || 0;
+                const total = currentOrder.total || (subtotal + tax);
+
+                document.getElementById('orderMetaSummary').textContent = `${currentOrder.orderSeq || 'Pesanan'} • ${currentOrder.items.length} item`;
+                document.getElementById('summarySubtotal').textContent = formatHarga(subtotal);
+                document.getElementById('summaryTax').textContent = formatHarga(tax);
+                document.getElementById('summaryTotal').textContent = formatHarga(total);
+
+                document.getElementById('tunaiTotalDisplay').textContent = formatHarga(total);
+                document.getElementById('qrisTotalDisplay').textContent = formatHarga(total);
+
+                if (currentOrder.notes) {
+                    document.getElementById('summaryNotesBlock').style.display = 'block';
+                    document.getElementById('summaryNotesText').textContent = currentOrder.notes;
+                }
+
+                const listEl = document.getElementById('summaryItemsList');
+                listEl.innerHTML = currentOrder.items.map(item => {
+                    const isGreen = item.iconGreen || (item.nama || '').toLowerCase().includes('matcha');
+                    let iconInner = '';
+                    if (item.image) {
+                        iconInner = `<img src="${item.image}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />`;
+                    } else if (isGreen) {
+                        iconInner = `<i class="bi bi-flower1" style="color:#16a34a;"></i>`;
+                    } else if ((item.nama || '').toLowerCase().includes('roti') || (item.nama || '').toLowerCase().includes('croissant')) {
+                        iconInner = `<i class="bi bi-layers"></i>`;
+                    } else {
+                        iconInner = `<i class="bi bi-cup-hot"></i>`;
+                    }
+
+                    return `
+                        <div class="summary-item-row">
+                            <div class="summary-item-icon ${isGreen ? 'green' : ''}">
+                                ${iconInner}
+                            </div>
+                            <div class="summary-item-info">
+                                <div class="summary-item-name">${item.nama}</div>
+                                <div class="summary-item-qty">${item.qty} × ${formatHarga(item.harga)}</div>
+                            </div>
+                            <div class="summary-item-price">${formatHarga(item.harga * item.qty)}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                initCashSuggestions(total);
+            }
+
+            function initCashSuggestions(total) {
+                const btnExact = document.getElementById('btnExactCash');
+                btnExact.textContent = 'Uang pas';
+                btnExact.onclick = () => setCashInput(total);
+
+                const opt1 = Math.ceil(total / 50000) * 50000;
+                const val1 = opt1 > total ? opt1 : total + 10000;
+                const btn1 = document.getElementById('btnCash1');
+                btn1.textContent = formatHarga(val1);
+                btn1.onclick = () => setCashInput(val1);
+
+                const opt2 = Math.ceil(total / 100000) * 100000;
+                const val2 = opt2 > val1 ? opt2 : val1 + 50000;
+                const btn2 = document.getElementById('btnCash2');
+                btn2.textContent = formatHarga(val2);
+                btn2.onclick = () => setCashInput(val2);
+            }
+
+            function setCashInput(amount) {
+                const input = document.getElementById('inputCash');
+                input.value = formatHarga(amount);
+                handleCashInput();
+            }
+
+            function handleCashInput() {
+                const total = currentOrder.total || currentOrder.items.reduce((s, i) => s + (i.harga * i.qty), 0);
+                const input = document.getElementById('inputCash');
+                const raw = Number(input.value.replace(/\D/g, '')) || 0;
+                const btn = document.getElementById('btnSubmitTunai');
+                const changeEl = document.getElementById('changeAmount');
+
+                if (raw >= total) {
+                    const change = raw - total;
+                    changeEl.textContent = formatHarga(change);
+                    btn.disabled = false;
+                } else {
+                    changeEl.textContent = 'Rp0';
+                    btn.disabled = true;
+                }
+            }
+
+            const inputCash = document.getElementById('inputCash');
+            inputCash.addEventListener('input', () => {
+                const val = inputCash.value.replace(/\D/g, '');
+                if (val) {
+                    inputCash.value = 'Rp' + Number(val).toLocaleString('id-ID');
+                } else {
+                    inputCash.value = '';
+                }
+                handleCashInput();
+            });
+
+            document.querySelectorAll('.method-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    selectedMethod = tab.dataset.method;
+
+                    if (selectedMethod === 'Tunai') {
+                        document.getElementById('tunaiSection').style.display = 'block';
+                        document.getElementById('qrisSection').style.display = 'none';
+                    } else {
+                        document.getElementById('tunaiSection').style.display = 'none';
+                        document.getElementById('qrisSection').style.display = 'block';
+                    }
+                });
+            });
+
+            function executePayment(method, cashGiven) {
+                const total = currentOrder.total || currentOrder.items.reduce((s, i) => s + (i.harga * i.qty), 0);
+                const stockUpdates = [];
+
+                currentOrder.items.forEach(item => {
+                    const existingProduct = getProductById(item.id);
+                    if (existingProduct) {
+                        const oldStock = Number(existingProduct.stok) || 0;
+                        const newStock = Math.max(0, oldStock - item.qty);
+                        updateProduct(item.id, { stok: newStock });
+                        stockUpdates.push({
+                            name: item.nama,
+                            oldStock: oldStock,
+                            newStock: newStock,
+                            unit: item.satuan || 'pcs'
+                        });
+                    }
+                });
+
+                const nextTrx = getNextTransactionId();
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.') + ' WIB';
+                const timeHour = now.toLocaleTimeString('id-ID', { hour: '2-digit' }) + '.00';
+                const dateString = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                const completedData = {
+                    id: currentOrder.orderNo || nextTrx.id,
+                    trxId: currentOrder.orderNo || nextTrx.id,
+                    order: currentOrder.orderSeq || nextTrx.order,
+                    orderSeq: nextTrx.orderSeq,
+                    date: dateString,
+                    time: timeString,
+                    timeHour: timeHour,
+                    timestamp: `${dateString} • ${timeString}`,
+                    cashier: 'Rosy',
+                    status: 'Berhasil',
+                    method: method,
+                    items: currentOrder.items,
+                    subtotal: currentOrder.subtotal,
+                    tax: currentOrder.tax || 0,
+                    total: total,
+                    received: method === 'Tunai' ? cashGiven : total,
+                    change: method === 'Tunai' ? (cashGiven - total) : 0,
+                    notes: currentOrder.notes || '',
+                    stockUpdates: stockUpdates
+                };
+
+                addTransaction(completedData);
+
+                sessionStorage.setItem('posit_completed_order', JSON.stringify(completedData));
+                sessionStorage.removeItem('posit_current_order');
+
+                window.location.href = 'payment-success-cashier.html';
+            }
+
+            document.getElementById('btnSubmitTunai').addEventListener('click', () => {
+                const total = currentOrder.total || currentOrder.items.reduce((s, i) => s + (i.harga * i.qty), 0);
+                const raw = Number(document.getElementById('inputCash').value.replace(/\D/g, '')) || 0;
+
+                if (raw < total) {
+                    alert('Nominal uang yang diterima kurang dari total tagihan.');
+                    document.getElementById('inputCash').focus();
+                    return;
+                }
+
+                executePayment('Tunai', raw);
+            });
+
+            document.getElementById('btnSubmitQris').addEventListener('click', () => {
+                executePayment('QRIS', currentOrder.total);
+            });
+
+            document.getElementById('btnReloadQr').addEventListener('click', () => {
+                alert('Kode QRIS berhasil diperbarui.');
+            });
+
+            const now = new Date();
+            const expTime = new Date(now.getTime() + 15 * 60000);
+            const expTimeStr = expTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
+            const expDateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('qrisExpiryText').textContent = `Berlaku sampai ${expTimeStr} • ${expDateStr}`;
+
+            renderOrderSummary();
+        </script>
+
+    </body>
+</html>

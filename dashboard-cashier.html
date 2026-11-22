@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Beranda — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                <div class="topbar-user">
+                    <span class="topbar-avatar">R</span>
+                    Rosy
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard-cashier.html" class="nav-item active">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products-cashier.html" class="nav-item">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier-cashier.html" class="nav-item">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="stock-cashier.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Selamat datang, Rosy</h1>
+                <a href="cashier-cashier.html" class="btn-kasir">
+                    <i class="bi bi-layout-text-window-reverse"></i> Buka kasir
+                </a>
+            </div>
+
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-label">Penjualan hari ini</div>
+                    <div class="stat-value" id="dashTotalSales">Rp0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Transaksi</div>
+                    <div class="stat-value" id="dashTrxCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Produk terjual</div>
+                    <div class="stat-value" id="dashTotalItems">0 item</div>
+                </div>
+            </div>
+
+            <div class="dashboard-cols">
+                <div class="left-col">
+
+                    <div class="card-box">
+                        <div class="card-box-title">Penjualan per jam</div>
+                        <div class="card-box-sub" id="chartDate"></div>
+                        <div class="chart-wrap">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card-box">
+                        <div class="card-box-title">Transaksi terbaru</div>
+                        <div class="card-box-sub">Semua pembayaran berhasil hari ini</div>
+                        <table class="trx-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Transaksi / Waktu</th>
+                                    <th>Metode</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashTrxBody"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="right-col">
+
+                    <div class="card-box">
+                        <div class="card-box-title">Produk terlaris</div>
+                        <div class="card-box-sub">Berdasarkan jumlah terjual hari ini</div>
+                        <div id="dashTopProducts"></div>
+                    </div>
+
+                    <div class="card-box">
+                        <div class="card-box-title">Perhatian stok</div>
+                        <div id="stockAlertsContainer" style="margin-top:14px;"></div>
+                        <a href="stock-cashier.html" class="btn-outline-sm">Kelola stok</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+
+        <script src="js/productsData.js"></script>
+        <script src="js/transaction.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+        <script>
+            const storedUser = sessionStorage.getItem('pos_user');
+            if (storedUser) {
+                try {
+                    const u = JSON.parse(storedUser);
+                    if (u.role === 'owner') {
+                        window.location.href = 'dashboard.html';
+                    }
+                } catch (e) {}
+            }
+
+            document.getElementById('chartDate').textContent = new Date().toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+
+            const products = getProducts();
+            const lowStockProducts = products.filter(p => p.status === 'aktif' && p.stok <= (p.minStok !== undefined ? p.minStok : 5));
+            const stockContainer = document.getElementById('stockAlertsContainer');
+            if (stockContainer) {
+                if (lowStockProducts.length > 0) {
+                    stockContainer.innerHTML = lowStockProducts.slice(0, 3).map(p => {
+                        const statusText = p.stok === 0 ? 'Habis' : 'Menipis';
+                        return `
+                            <div class="stock-alert">
+                                <i class="bi bi-exclamation-circle-fill"></i>
+                                <div>
+                                    <div class="stock-alert-title">${p.nama} • ${statusText}</div>
+                                    <div class="stock-alert-sub">Tersisa ${p.stok} ${p.satuan || 'pcs'}. Batas Minimum ${p.minStok || 5} ${p.satuan || 'pcs'}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    stockContainer.innerHTML = `<div class="text-secondary py-2" style="font-size: 0.75rem;">Semua stok aman.</div>`;
+                }
+            }
+
+            const trxStats = getTransactionStats();
+            const transactions = getTransactions();
+
+            document.getElementById('dashTotalSales').textContent = formatHarga(trxStats.totalPenjualan);
+            document.getElementById('dashTrxCount').textContent = trxStats.totalTransaksi;
+            document.getElementById('dashTotalItems').textContent = `${trxStats.totalItem} item`;
+
+            const trxBody = document.getElementById('dashTrxBody');
+            if (trxBody) {
+                if (transactions.length === 0) {
+                    trxBody.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-secondary">Belum ada transaksi.</td></tr>`;
+                } else {
+                    trxBody.innerHTML = transactions.slice(0, 3).map(t => `
+                        <tr>
+                            <td>
+                                <div class="trx-id">${t.id}</div>
+                                <div class="trx-meta">${t.time || ''} • Kasir: ${t.cashier || 'Rosy'}</div>
+                            </td>
+                            <td>${t.method}</td>
+                            <td>${formatHarga(t.total)}</td>
+                            <td><span class="badge-berhasil">${t.status || 'Berhasil'}</span></td>
+                        </tr>
+                    `).join('');
+                }
+            }
+
+            const topProdEl = document.getElementById('dashTopProducts');
+            if (topProdEl) {
+                if (trxStats.topProducts.length === 0) {
+                    topProdEl.innerHTML = `<div class="text-secondary py-2" style="font-size: 0.8125rem;">Belum ada penjualan.</div>`;
+                } else {
+                    topProdEl.innerHTML = trxStats.topProducts.slice(0, 3).map(p => `
+                        <div class="product-row">
+                            <div>
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-price">${formatHarga(p.revenue)}</div>
+                            </div>
+                            <div class="product-qty">${p.qty} ${p.unit}</div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            const currentHour = new Date().getHours();
+            const hours = [];
+            for (let i = 5; i >= 0; i--) {
+                const h = (currentHour - i + 24) % 24;
+                hours.push(String(h).padStart(2, '0') + '.00');
+            }
+            const values = hours.map(h => trxStats.hourlyMap[h] || 0);
+            const maxVal = Math.max(...values, 1);
+            const colors = values.map(v =>
+                v === maxVal && v > 0 ? '#7d2e0e' : v > 0 ? '#f5ede9' : 'transparent'
+            );
+            const borderColors = values.map(v =>
+                v === maxVal && v > 0 ? '#7d2e0e' : v > 0 ? '#e8c8ba' : 'transparent'
+            );
+
+            new Chart(document.getElementById('salesChart'), {
+                type: 'bar',
+                data: {
+                    labels: hours,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: borderColors,
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: { top: 24 }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ctx.parsed.y > 0
+                                    ? 'Rp' + (ctx.parsed.y / 1000) + ' rb'
+                                    : '—'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            border: { display: false },
+                            ticks: { font: { size: 11, family: 'Inter' }, color: '#9ca3af' }
+                        },
+                        y: {
+                            display: false,
+                            beginAtZero: true,
+                            suggestedMax: maxVal > 0 ? maxVal * 1.15 : 1
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'valueLabels',
+                    afterDatasetsDraw(chart) {
+                        const { ctx, data, scales: { x, y } } = chart;
+                        ctx.save();
+                        ctx.font = '500 11px Inter';
+                        ctx.fillStyle = '#6b7280';
+                        ctx.textAlign = 'center';
+                        data.datasets[0].data.forEach((val, i) => {
+                            const xPos = x.getPixelForValue(i);
+                            if (val > 0) {
+                                const yPos = y.getPixelForValue(val) - 8;
+                                ctx.fillText((val / 1000) + ' rb', xPos, yPos);
+                            } else {
+                                const yPos = y.getPixelForValue(0) - 8;
+                                ctx.fillText('—', xPos, yPos);
+                            }
+                        });
+                        ctx.restore();
+                    }
+                }]
+            });
+        </script>
+
+    </body>
+</html>

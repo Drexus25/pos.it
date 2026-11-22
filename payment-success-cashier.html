@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Pembayaran Berhasil — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/paymentStyle.css" rel="stylesheet" />
+        <script src="js/productsData.js"></script>
+        <script src="js/transaction.js"></script>
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                <div class="topbar-user">
+                    <span class="topbar-avatar">R</span>
+                    Rosy
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard-cashier.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products-cashier.html" class="nav-item">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier-cashier.html" class="nav-item active">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="stock-cashier.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Pembayaran berhasil</h1>
+            </div>
+
+            <div class="payment-layout">
+
+                <div>
+                    <div class="receipt-card">
+                        <div class="receipt-brand-icon">
+                            <i class="bi bi-cup-hot"></i>
+                        </div>
+                        <div class="receipt-brand-name">Kafe IMKafe</div>
+                        <div class="receipt-brand-meta">Jl. Melati No. 18, Bandung</div>
+                        <div class="receipt-brand-meta">0812-3456-7890</div>
+
+                        <div class="receipt-meta-grid">
+                            <div class="receipt-meta-row">
+                                <span class="receipt-meta-label">Transaksi</span>
+                                <span class="receipt-meta-val" id="receiptTrxId">-</span>
+                            </div>
+                            <div class="receipt-meta-row">
+                                <span class="receipt-meta-label">Tanggal</span>
+                                <span class="receipt-meta-val" id="receiptTimestamp">-</span>
+                            </div>
+                            <div class="receipt-meta-row">
+                                <span class="receipt-meta-label">Kasir</span>
+                                <span class="receipt-meta-val" id="receiptCashier">Rosy</span>
+                            </div>
+                        </div>
+
+                        <div class="receipt-items-sec" id="receiptItemsList"></div>
+
+                        <div class="receipt-summary-sec">
+                            <div class="receipt-summary-row">
+                                <span>Subtotal</span>
+                                <span id="receiptSubtotal">Rp0</span>
+                            </div>
+                            <div class="receipt-summary-row">
+                                <span>Pajak / biaya</span>
+                                <span>Rp0</span>
+                            </div>
+                            <div class="receipt-total-row">
+                                <span>Total</span>
+                                <span id="receiptTotal">Rp0</span>
+                            </div>
+                            <div class="receipt-summary-row">
+                                <span>Metode</span>
+                                <span id="receiptMethod">Tunai</span>
+                            </div>
+                            <div class="receipt-summary-row">
+                                <span>Diterima</span>
+                                <span id="receiptReceived">Rp0</span>
+                            </div>
+                            <div class="receipt-summary-row">
+                                <span>Kembalian</span>
+                                <span id="receiptChange">Rp0</span>
+                            </div>
+                        </div>
+
+                        <div class="receipt-footer-msg">Terima kasih sudah singgah. Sampai jumpa kembali!</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="success-status-card">
+                        <div class="success-banner">
+                            <div class="success-icon-circle">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <div>
+                                <div class="success-banner-title">Pesanan sudah lunas.</div>
+                                <div class="success-banner-sub" id="successBannerSub">Pembayaran tunai tercatat dengan aman.</div>
+                            </div>
+                        </div>
+
+                        <div class="success-detail-row">
+                            <span class="success-detail-label">Total dibayar</span>
+                            <span class="success-detail-val" id="successTotalPaid">Rp0</span>
+                        </div>
+                        <div class="success-detail-row" id="rowSuccessReceived">
+                            <span class="success-detail-label">Uang diterima</span>
+                            <span class="success-detail-val" id="successReceived">Rp0</span>
+                        </div>
+                        <div class="success-detail-row" id="rowSuccessChange">
+                            <span class="success-detail-label">Kembalian pelanggan</span>
+                            <span class="success-detail-val" id="successChange">Rp0</span>
+                        </div>
+
+                        <div class="stock-updated-box" id="stockUpdatedBox">
+                            <i class="bi bi-check-circle"></i>
+                            <div>
+                                <div class="stock-updated-title">Stok telah diperbarui</div>
+                                <div class="stock-updated-list" id="stockUpdatedList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="share-receipt-card">
+                        <div class="share-receipt-title">Bagikan struk digital</div>
+                        <button type="button" class="btn-share-wa" id="btnShareWa">
+                            <i class="bi bi-whatsapp"></i> Bagikan WhatsApp
+                        </button>
+                        <div class="share-action-grid">
+                            <button type="button" class="btn-outline-action" id="btnCopyReceiptLink">
+                                <i class="bi bi-link-45deg"></i> Salin link struk
+                            </button>
+                            <button type="button" class="btn-outline-action" onclick="window.print()">
+                                <i class="bi bi-printer"></i> Cetak struk
+                            </button>
+                        </div>
+                    </div>
+
+                    <a href="cashier-cashier.html" class="btn-new-trx">
+                        <i class="bi bi-plus-lg"></i> Transaksi baru
+                    </a>
+                </div>
+
+            </div>
+
+        </main>
+
+        <script>
+            let completedData = null;
+            try {
+                const stored = sessionStorage.getItem('posit_completed_order');
+                if (stored) {
+                    completedData = JSON.parse(stored);
+                }
+            } catch (e) {}
+
+            if (!completedData) {
+                const allTrx = getTransactions();
+                if (allTrx.length > 0) {
+                    completedData = allTrx[allTrx.length - 1];
+                }
+            }
+
+            if (completedData) {
+                renderReceipt(completedData);
+            }
+
+            function renderReceipt(data) {
+                document.getElementById('receiptTrxId').textContent = data.id || data.trxId || '-';
+                document.getElementById('receiptTimestamp').textContent = data.timestamp || `${data.date || ''} • ${data.time || ''}`;
+                document.getElementById('receiptCashier').textContent = data.cashier || 'Rosy';
+
+                const subtotal = data.subtotal || (data.items || []).reduce((s, i) => s + (i.harga * i.qty), 0);
+                const tax = data.tax || 0;
+                const total = data.total || (subtotal + tax);
+
+                document.getElementById('receiptSubtotal').textContent = formatHarga(subtotal);
+                document.getElementById('receiptTotal').textContent = formatHarga(total);
+                document.getElementById('receiptMethod').textContent = data.method || 'Tunai';
+
+                document.getElementById('successTotalPaid').textContent = formatHarga(total);
+
+                if (data.method === 'QRIS') {
+                    document.getElementById('receiptReceived').parentElement.style.display = 'none';
+                    document.getElementById('receiptChange').parentElement.style.display = 'none';
+                    document.getElementById('rowSuccessReceived').style.display = 'none';
+                    document.getElementById('rowSuccessChange').style.display = 'none';
+                    document.getElementById('successBannerSub').textContent = 'Pembayaran QRIS berhasil dikonfirmasi secara instan.';
+                } else {
+                    const received = data.received !== undefined ? data.received : total;
+                    const change = data.change !== undefined ? data.change : 0;
+                    document.getElementById('receiptReceived').textContent = formatHarga(received);
+                    document.getElementById('receiptChange').textContent = formatHarga(change);
+                    document.getElementById('successReceived').textContent = formatHarga(received);
+                    document.getElementById('successChange').textContent = formatHarga(change);
+                    document.getElementById('successBannerSub').textContent = 'Pembayaran tunai tercatat dengan aman.';
+                }
+
+                const listEl = document.getElementById('receiptItemsList');
+                if (data.items && data.items.length > 0) {
+                    listEl.innerHTML = data.items.map(item => `
+                        <div class="receipt-item-row">
+                            <div class="receipt-item-left">
+                                <div class="receipt-item-name">${item.nama}</div>
+                                <div class="receipt-item-qty">${item.qty} × ${formatHarga(item.harga)}</div>
+                            </div>
+                            <div class="receipt-item-total">${formatHarga(item.harga * item.qty)}</div>
+                        </div>
+                    `).join('');
+                }
+
+                const stockBox = document.getElementById('stockUpdatedBox');
+                const stockList = document.getElementById('stockUpdatedList');
+                if (data.stockUpdates && data.stockUpdates.length > 0) {
+                    stockBox.style.display = 'flex';
+                    stockList.innerHTML = data.stockUpdates.map(su => `
+                        <div>${su.name}: ${su.oldStock} → ${su.newStock} ${su.unit}</div>
+                    `).join('');
+                } else {
+                    stockBox.style.display = 'none';
+                }
+            }
+
+            document.getElementById('btnShareWa').addEventListener('click', () => {
+                if (!completedData) return;
+                const id = completedData.id || completedData.trxId || '';
+                const total = formatHarga(completedData.total);
+                const text = `Halo, terima kasih telah berbelanja di Kafe IMKafe! Struk pesanan ${id} sebesar ${total} dapat diakses secara digital.`;
+                const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+                window.open(url, '_blank');
+            });
+
+            document.getElementById('btnCopyReceiptLink').addEventListener('click', () => {
+                if (!completedData) return;
+                const dummyUrl = `${window.location.origin}/transaction-detail.html?id=${completedData.id || ''}`;
+                navigator.clipboard.writeText(dummyUrl).then(() => {
+                    alert('Link struk digital berhasil disalin ke clipboard!');
+                }).catch(() => {
+                    alert('Gagal menyalin link.');
+                });
+            });
+        </script>
+
+    </body>
+</html>
