@@ -1,5 +1,5 @@
 :root {
-    --pos-orange: #7d2e0e;
+    --pos-orange: #c0421a;
     --pos-orange-light: #f5ede9;
     --sidebar-width: 165px;
     --topbar-height: 56px;
@@ -197,7 +197,7 @@ body {
     text-decoration: none;
     transition: background 0.15s;
 }
-.btn-kasir:hover { background-color: #6b2609; color: #fff; }
+.btn-kasir:hover { background-color: #a03612; color: #fff; }
 
 
 .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }

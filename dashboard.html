@@ -10,6 +10,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
         <link href="css/dashboardStyle.css" rel="stylesheet" />
         <script src="js/companyProfile.js"></script>
+        <script src="js/sonner.js"></script>
     </head>
 
     <body>
@@ -30,13 +31,7 @@
         </div>
 
         <aside class="sidebar">
-            <div class="sidebar-business">
-                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
-                <div class="sidebar-business-info">
-                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
-                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
-                </div>
-            </div>
+
 
             <a href="#" class="nav-item active">
                 <i class="bi bi-grid-1x2"></i> Beranda
@@ -221,10 +216,10 @@
             const values = hours.map(h => trxStats.hourlyMap[h] || 0);
             const maxVal = Math.max(...values, 1);
             const colors = values.map(v =>
-                v === maxVal && v > 0 ? '#7d2e0e' : v > 0 ? '#f5ede9' : 'transparent'
+                v === maxVal && v > 0 ? '#c0421a' : v > 0 ? '#f5ede9' : 'transparent'
             );
             const borderColors = values.map(v =>
-                v === maxVal && v > 0 ? '#7d2e0e' : v > 0 ? '#e8c8ba' : 'transparent'
+                v === maxVal && v > 0 ? '#c0421a' : v > 0 ? '#e8c8ba' : 'transparent'
             );
 
             new Chart(document.getElementById('salesChart'), {

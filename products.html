@@ -12,6 +12,7 @@
         <link href="css/productsStyle.css" rel="stylesheet" />
         <script src="js/productsData.js"></script>
         <script src="js/companyProfile.js"></script>
+        <script src="js/sonner.js"></script>
     </head>
 
     <body>
@@ -32,13 +33,7 @@
         </div>
 
         <aside class="sidebar">
-            <div class="sidebar-business">
-                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
-                <div class="sidebar-business-info">
-                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
-                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
-                </div>
-            </div>
+
 
             <a href="dashboard.html" class="nav-item">
                 <i class="bi bi-grid-1x2"></i> Beranda
@@ -168,9 +163,10 @@
                     tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-secondary">Tidak ada produk ditemukan.</td></tr>`;
                 } else {
                     tbody.innerHTML = paginated.map(p => {
+                        const isGreen = p.iconGreen || (p.nama || '').toLowerCase().includes('matcha');
                         const iconHtml = p.image 
                             ? `<img src="${p.image}" class="product-icon" style="object-fit:cover;" alt="${p.nama}" />`
-                            : `<span class="product-icon ${p.iconGreen ? 'green' : ''}"><i class="bi ${p.icon || 'bi-box-seam'}"></i></span>`;
+                            : `<span class="product-icon ${isGreen ? 'green' : ''}">${getProductIconSvg(p, 18)}</span>`;
                         
                         const badgeClass = p.status === 'aktif' ? 'badge-aktif' : 'badge-nonaktif';
                         const badgeText = p.status === 'aktif' ? 'Aktif' : 'Nonaktif';

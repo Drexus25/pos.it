@@ -117,7 +117,7 @@
     padding: 11px 22px;
     font-size: 0.875rem;
     font-weight: 600;
-    background: #9d3513;
+    background: #c0421a;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -127,7 +127,7 @@
 }
 
 .btn-simpan-profil:hover {
-    background: #842c0f;
+    background: #a03612;
 }
 
 .receipt-preview-box {

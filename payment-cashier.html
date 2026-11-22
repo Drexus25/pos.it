@@ -14,6 +14,7 @@
         <script src="js/productsData.js"></script>
         <script src="js/transaction.js"></script>
         <script src="js/companyProfile.js"></script>
+        <script src="js/sonner.js"></script>
     </head>
 
     <body>
@@ -32,13 +33,7 @@
         </div>
 
         <aside class="sidebar">
-            <div class="sidebar-business">
-                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
-                <div class="sidebar-business-info">
-                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
-                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
-                </div>
-            </div>
+
 
             <a href="dashboard-cashier.html" class="nav-item">
                 <i class="bi bi-grid-1x2"></i> Beranda
@@ -268,16 +263,7 @@
                 const listEl = document.getElementById('summaryItemsList');
                 listEl.innerHTML = currentOrder.items.map(item => {
                     const isGreen = item.iconGreen || (item.nama || '').toLowerCase().includes('matcha');
-                    let iconInner = '';
-                    if (item.image) {
-                        iconInner = `<img src="${item.image}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />`;
-                    } else if (isGreen) {
-                        iconInner = `<i class="bi bi-flower1" style="color:#16a34a;"></i>`;
-                    } else if ((item.nama || '').toLowerCase().includes('roti') || (item.nama || '').toLowerCase().includes('croissant')) {
-                        iconInner = `<i class="bi bi-layers"></i>`;
-                    } else {
-                        iconInner = `<i class="bi bi-cup-hot"></i>`;
-                    }
+                    const iconInner = getProductIconSvg(item, 18);
 
                     return `
                         <div class="summary-item-row">

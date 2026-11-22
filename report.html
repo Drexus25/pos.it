@@ -12,6 +12,7 @@
         <link href="css/addProductStyle.css" rel="stylesheet" />
         <link href="css/reportStyle.css" rel="stylesheet" />
         <script src="js/companyProfile.js"></script>
+        <script src="js/sonner.js"></script>
     </head>
 
     <body>
@@ -34,13 +35,7 @@
         </div>
 
         <aside class="sidebar">
-            <div class="sidebar-business">
-                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
-                <div class="sidebar-business-info">
-                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
-                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
-                </div>
-            </div>
+
 
             <a href="dashboard.html" class="nav-item">
                 <i class="bi bi-grid-1x2"></i> Beranda
@@ -407,19 +402,19 @@
                 if (currentChartType === 'line') {
                     chartDataset = {
                         data: values,
-                        borderColor: '#8c3815',
-                        backgroundColor: 'rgba(140, 56, 21, 0.08)',
+                        borderColor: '#c0421a',
+                        backgroundColor: 'rgba(192, 66, 26, 0.08)',
                         fill: true,
                         tension: 0.35,
-                        pointBackgroundColor: '#8c3815',
+                        pointBackgroundColor: '#c0421a',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2,
                         pointRadius: 4,
                         borderWidth: 2
                     };
                 } else {
-                    const colors = values.map(v => v === maxVal && v > 0 ? '#7d2e0e' : v > 0 ? '#f5ede9' : 'transparent');
-                    const borderColors = values.map(v => v === maxVal && v > 0 ? '#7d2e0e' : v > 0 ? '#e8c8ba' : 'transparent');
+                    const colors = values.map(v => v === maxVal && v > 0 ? '#c0421a' : v > 0 ? '#f5ede9' : 'transparent');
+                    const borderColors = values.map(v => v === maxVal && v > 0 ? '#c0421a' : v > 0 ? '#e8c8ba' : 'transparent');
                     chartDataset = {
                         data: values,
                         backgroundColor: colors,

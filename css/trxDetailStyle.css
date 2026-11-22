@@ -144,7 +144,7 @@
 .payment-method-badge {
     display: inline-block;
     background: #fdf2ed;
-    color: #8c3815;
+    color: #c0421a;
     font-size: 0.72rem;
     font-weight: 600;
     padding: 4px 10px;
@@ -194,7 +194,7 @@
 }
 
 .btn-print-struk {
-    background-color: #8c3815;
+    background-color: #c0421a;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -211,7 +211,7 @@
     transition: background-color 0.15s;
 }
 .btn-print-struk:hover {
-    background-color: #722c0f;
+    background-color: #a03612;
 }
 
 .btn-copy-struk {
