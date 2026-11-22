@@ -12,6 +12,7 @@
         <link href="css/addProductStyle.css" rel="stylesheet" />
         <script src="js/productsData.js"></script>
         <script src="js/companyProfile.js"></script>
+        <script src="js/sonner.js"></script>
     </head>
 
     <body>
@@ -30,13 +31,7 @@
         </div>
 
         <aside class="sidebar">
-            <div class="sidebar-business">
-                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
-                <div class="sidebar-business-info">
-                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
-                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
-                </div>
-            </div>
+
 
             <a href="dashboard-cashier.html" class="nav-item">
                 <i class="bi bi-grid-1x2"></i> Beranda
@@ -165,8 +160,10 @@
             const product = getProductById(id) || getProducts()[0];
 
             if (!product) {
-                alert('Produk tidak ditemukan!');
-                window.location.href = 'products-cashier.html';
+                toast.error('Produk tidak ditemukan!');
+                setTimeout(() => {
+                    window.location.href = 'products-cashier.html';
+                }, 900);
                 throw new Error('Produk tidak ditemukan');
             }
 
@@ -246,17 +243,26 @@
                     image: uploadedImageData
                 });
 
-                alert('Perubahan berhasil disimpan!');
-                window.location.href = 'products-cashier.html';
+                toast.success('Perubahan berhasil disimpan!');
+                setTimeout(() => {
+                    window.location.href = 'products-cashier.html';
+                }, 900);
             });
 
             document.getElementById('btnDeleteProduct').addEventListener('click', () => {
-                const confirmed = confirm(`Apakah Anda yakin ingin menghapus produk "${product.nama}"?\nTindakan ini tidak dapat dibatalkan.`);
-                if (confirmed) {
-                    deleteProduct(product.id);
-                    alert('Produk berhasil dihapus!');
-                    window.location.href = 'products-cashier.html';
-                }
+                toast.confirm(`Hapus produk "${product.nama}"?`, {
+                    description: 'Tindakan ini tidak dapat dibatalkan.',
+                    confirmText: 'Hapus Produk',
+                    cancelText: 'Batal',
+                    danger: true,
+                    onConfirm: () => {
+                        deleteProduct(product.id);
+                        toast.success('Produk berhasil dihapus!');
+                        setTimeout(() => {
+                            window.location.href = 'products-cashier.html';
+                        }, 900);
+                    }
+                });
             });
 
             renderStatus();
