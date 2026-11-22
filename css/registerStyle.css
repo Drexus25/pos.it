@@ -51,7 +51,7 @@ html, body {
     flex-direction: column;
     justify-content: center;
     padding: 40px 80px;
-    max-width: 560px;
+    max-width: 700px;
     width: 100%;
     margin: 0 auto;
 }
@@ -113,6 +113,6 @@ html, body {
 .form-check-input:focus { box-shadow: 0 0 0 3px rgba(125,46,14,0.12); }
 
 @media (max-width: 767px) {
-    .login-left { min-height: auto; padding: 28px 24px; }
+    .login-left { display: none; }
     .login-right .form-area { padding: 32px 24px; }
 }

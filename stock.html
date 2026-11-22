@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Stok — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/addProductStyle.css" rel="stylesheet" />
+        <link href="css/productsStyle.css" rel="stylesheet" />
+        <link href="css/stockStyle.css" rel="stylesheet" />
+        <script src="js/productsData.js"></script>
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                
+                <div class="topbar-user">
+                    <span class="topbar-avatar">D</span>
+                    <div class="topbar-user-info">
+                        <span class="topbar-user-name">Damar</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products.html" class="nav-item">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier.html" class="nav-item">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="report.html" class="nav-item">
+                <i class="bi bi-graph-up"></i> Laporan
+            </a>
+            <a href="stock.html" class="nav-item active">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="bi bi-gear"></i> Profil
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Stok</h1>
+            </div>
+
+            <div class="stock-stat-cards">
+                <div class="stat-card">
+                    <div class="stat-label">Item dipantau</div>
+                    <div class="stat-value" id="statMonitored">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Stok aman</div>
+                    <div class="stat-value" id="statSafe">0 item</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Menipis</div>
+                    <div class="stat-value" id="statLow">0 item</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">habis</div>
+                    <div class="stat-value" id="statOut">0 item</div>
+                </div>
+            </div>
+
+            <div class="product-card">
+
+                <div class="product-toolbar">
+                    <div class="search-wrap">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="search-input" id="searchStockInput" placeholder="Cari produk atau bahan..." />
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="semua">Semua</button>
+                        <button class="filter-tab" data-filter="Aman">Aman</button>
+                        <button class="filter-tab" data-filter="Menipis">Menipis</button>
+                        <button class="filter-tab" data-filter="Habis">Habis</button>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="stock-table">
+                        <thead>
+                            <tr>
+                                <th>Nama item</th>
+                                <th>Stok</th>
+                                <th>Batas min.</th>
+                                <th>Status</th>
+                                <th>Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="product-pagination">
+                    <span id="stockPaginationInfo"></span>
+                    <div class="pagination-controls" id="stockPaginationControls"></div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <script>
+            const tbody = document.getElementById('stockTableBody');
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            const searchInput = document.getElementById('searchStockInput');
+            const paginationInfo = document.getElementById('stockPaginationInfo');
+            const paginationControls = document.getElementById('stockPaginationControls');
+
+            const PAGE_SIZE = 5;
+            let activeFilter = 'semua';
+            let currentPage = 1;
+
+            function getItemStatus(stok, minStok) {
+                const s = Number(stok);
+                const m = Number(minStok);
+                if (s === 0) return 'Habis';
+                if (s <= m) return 'Menipis';
+                return 'Aman';
+            }
+
+            function renderStockView() {
+                const products = getProducts();
+
+                let safeCount = 0;
+                let lowCount = 0;
+                let outCount = 0;
+
+                products.forEach(p => {
+                    const status = getItemStatus(p.stok, p.minStok !== undefined ? p.minStok : 5);
+                    if (status === 'Aman') safeCount++;
+                    else if (status === 'Menipis') lowCount++;
+                    else if (status === 'Habis') outCount++;
+                });
+
+                document.getElementById('statMonitored').textContent = products.length;
+                document.getElementById('statSafe').textContent = `${safeCount} item`;
+                document.getElementById('statLow').textContent = `${lowCount} item`;
+                document.getElementById('statOut').textContent = `${outCount} item`;
+
+                const query = searchInput.value.trim().toLowerCase();
+
+                const filtered = products.filter(p => {
+                    const status = getItemStatus(p.stok, p.minStok !== undefined ? p.minStok : 5);
+                    const matchesCategory = activeFilter === 'semua' || status === activeFilter;
+                    const matchesSearch = p.nama.toLowerCase().includes(query);
+                    return matchesCategory && matchesSearch;
+                });
+
+                const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+                if (currentPage > totalPages) currentPage = totalPages;
+
+                const start = (currentPage - 1) * PAGE_SIZE;
+                const end = start + PAGE_SIZE;
+                const paginated = filtered.slice(start, end);
+
+                if (paginated.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-secondary">Tidak ada produk ditemukan.</td></tr>`;
+                } else {
+                    tbody.innerHTML = paginated.map(p => {
+                        const status = getItemStatus(p.stok, p.minStok !== undefined ? p.minStok : 5);
+                        let badgeClass = 'badge-aman';
+                        if (status === 'Menipis') badgeClass = 'badge-menipis';
+                        else if (status === 'Habis') badgeClass = 'badge-habis';
+
+                        const minDisplay = p.minStok !== undefined ? p.minStok : 5;
+
+                        return `
+                            <tr>
+                                <td class="stock-item-name">${p.nama}</td>
+                                <td>${p.stok}</td>
+                                <td>${minDisplay}</td>
+                                <td><span class="${badgeClass}">${status}</span></td>
+                                <td>
+                                    <a href="edit-product.html?id=${p.id}" class="btn-perbarui">
+                                        Perbarui →
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+
+                if (filtered.length === 0) {
+                    paginationInfo.textContent = 'Menampilkan 0 produk.';
+                } else {
+                    paginationInfo.textContent = `Menampilkan ${start + 1}–${Math.min(end, filtered.length)} dari ${filtered.length} produk.`;
+                }
+
+                paginationControls.innerHTML = '';
+
+                const btnPrev = document.createElement('button');
+                btnPrev.className = 'btn-page';
+                btnPrev.textContent = 'Sebelumnya';
+                btnPrev.disabled = currentPage === 1;
+                btnPrev.addEventListener('click', () => { currentPage--; renderStockView(); });
+                paginationControls.appendChild(btnPrev);
+
+                for (let p = 1; p <= totalPages; p++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-page' + (p === currentPage ? ' current' : '');
+                    btn.textContent = p;
+                    btn.addEventListener('click', () => { currentPage = p; renderStockView(); });
+                    paginationControls.appendChild(btn);
+                }
+
+                const btnNext = document.createElement('button');
+                btnNext.className = 'btn-page';
+                btnNext.textContent = 'Berikutnya';
+                btnNext.disabled = currentPage === totalPages;
+                btnNext.addEventListener('click', () => { currentPage++; renderStockView(); });
+                paginationControls.appendChild(btnNext);
+            }
+
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    activeFilter = tab.dataset.filter;
+                    currentPage = 1;
+                    renderStockView();
+                });
+            });
+
+            searchInput.addEventListener('input', () => {
+                currentPage = 1;
+                renderStockView();
+            });
+
+            renderStockView();
+        </script>
+
+    </body>
+</html>

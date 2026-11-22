@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Produk — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/productsStyle.css" rel="stylesheet" />
+        <script src="js/productsData.js"></script>
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                
+                <div class="topbar-user">
+                    <span class="topbar-avatar">D</span>
+                    Damar
+                    
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products.html" class="nav-item active">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier.html" class="nav-item">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="report.html" class="nav-item">
+                <i class="bi bi-graph-up"></i> Laporan
+            </a>
+            <a href="stock.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="bi bi-gear"></i> Profil
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Produk</h1>
+                <a href="add-product.html" class="btn-kasir">
+                    <i class="bi bi-plus-lg"></i> Tambah produk
+                </a>
+            </div>
+
+            <div class="product-stats">
+                <span>0 produk</span>
+                <span class="stat-aktif">0 aktif</span>
+                <span>0 nonaktif</span>
+            </div>
+
+            <div class="product-card">
+
+                <div class="product-toolbar">
+                    <div class="search-wrap">
+                        <i class="bi bi-search"></i>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Cari produk..." />
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="semua">Semua</button>
+                        <button class="filter-tab" data-filter="aktif">Aktif</button>
+                        <button class="filter-tab" data-filter="nonaktif">Nonaktif</button>
+                    </div>
+                </div>
+
+                <table class="product-table" id="productTable">
+                    <thead>
+                        <tr>
+                            <th>Nama produk</th>
+                            <th>Kategori</th>
+                            <th>Harga jual</th>
+                            <th>Stok</th>
+                            <th>Status</th>
+                            <th class="text-center">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productBody"></tbody>
+                </table>
+
+                <div class="product-pagination">
+                    <span id="paginationInfo"></span>
+                    <div class="pagination-controls" id="paginationControls"></div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <script>
+            const tbody = document.getElementById('productBody');
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            const searchInput = document.getElementById('searchInput');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationControls = document.getElementById('paginationControls');
+
+            const PAGE_SIZE = 5;
+            let activeFilter = 'semua';
+            let currentPage = 1;
+            let filteredProducts = [];
+
+            function renderProducts() {
+                const products = getProducts();
+
+                const total = products.length;
+                const aktif = products.filter(p => p.status === 'aktif').length;
+                const habis = products.filter(p => p.status === 'aktif' && Number(p.stok) === 0).length;
+                const nonaktif = products.filter(p => p.status === 'nonaktif').length;
+
+                const statsEl = document.querySelector('.product-stats');
+                if (statsEl) {
+                    statsEl.innerHTML = `
+                        <span>${total} produk</span>
+                        <span class="stat-aktif">${aktif} aktif</span>
+                        ${habis > 0 ? `<span class="stat-habis">${habis} produk habis</span>` : ''}
+                        <span>${nonaktif} nonaktif</span>
+                    `;
+                }
+
+                const query = searchInput.value.trim().toLowerCase();
+                filteredProducts = products.filter(p => {
+                    const matchesCategory = activeFilter === 'semua' || p.status === activeFilter;
+                    const matchesSearch = p.nama.toLowerCase().includes(query);
+                    return matchesCategory && matchesSearch;
+                });
+
+                const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
+                if (currentPage > totalPages) currentPage = totalPages;
+
+                const start = (currentPage - 1) * PAGE_SIZE;
+                const end = start + PAGE_SIZE;
+                const paginated = filteredProducts.slice(start, end);
+
+                if (paginated.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-secondary">Tidak ada produk ditemukan.</td></tr>`;
+                } else {
+                    tbody.innerHTML = paginated.map(p => {
+                        const iconHtml = p.image 
+                            ? `<img src="${p.image}" class="product-icon" style="object-fit:cover;" alt="${p.nama}" />`
+                            : `<span class="product-icon ${p.iconGreen ? 'green' : ''}"><i class="bi ${p.icon || 'bi-box-seam'}"></i></span>`;
+                        
+                        const badgeClass = p.status === 'aktif' ? 'badge-aktif' : 'badge-nonaktif';
+                        const badgeText = p.status === 'aktif' ? 'Aktif' : 'Nonaktif';
+                        const displayHarga = typeof p.harga === 'number' ? formatHarga(p.harga) : p.harga;
+                        const displayStok = typeof p.stok === 'number' ? `${p.stok} ${p.satuan || 'pcs'}` : p.stok;
+
+                        return `
+                            <tr data-status="${p.status}" data-id="${p.id}">
+                                <td>
+                                    <div class="product-name-cell">
+                                        ${iconHtml}
+                                        <span class="product-name-text">${p.nama}</span>
+                                    </div>
+                                </td>
+                                <td>${p.kategori || '—'}</td>
+                                <td>${displayHarga}</td>
+                                <td>${displayStok}</td>
+                                <td><span class="${badgeClass}">${badgeText}</span></td>
+                                <td>
+                                    <div class="action-cell">
+                                        <button class="btn-ubah" onclick="window.location.href='edit-product.html?id=${p.id}'">Ubah</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+
+                if (filteredProducts.length === 0) {
+                    paginationInfo.textContent = 'Menampilkan 0 produk.';
+                } else {
+                    paginationInfo.textContent = `Menampilkan ${start + 1}–${Math.min(end, filteredProducts.length)} dari ${filteredProducts.length} produk.`;
+                }
+
+                paginationControls.innerHTML = '';
+
+                const btnPrev = document.createElement('button');
+                btnPrev.className = 'btn-page';
+                btnPrev.textContent = 'Sebelumnya';
+                btnPrev.disabled = currentPage === 1;
+                btnPrev.addEventListener('click', () => { currentPage--; renderProducts(); });
+                paginationControls.appendChild(btnPrev);
+
+                for (let p = 1; p <= totalPages; p++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-page' + (p === currentPage ? ' current' : '');
+                    btn.textContent = p;
+                    btn.addEventListener('click', () => { currentPage = p; renderProducts(); });
+                    paginationControls.appendChild(btn);
+                }
+
+                const btnNext = document.createElement('button');
+                btnNext.className = 'btn-page';
+                btnNext.textContent = 'Berikutnya';
+                btnNext.disabled = currentPage === totalPages;
+                btnNext.addEventListener('click', () => { currentPage++; renderProducts(); });
+                paginationControls.appendChild(btnNext);
+            }
+
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    activeFilter = tab.dataset.filter;
+                    currentPage = 1;
+                    renderProducts();
+                });
+            });
+
+            searchInput.addEventListener('input', () => {
+                currentPage = 1;
+                renderProducts();
+            });
+
+            renderProducts();
+        </script>
+
+    </body>
+</html>

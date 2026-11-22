@@ -62,7 +62,7 @@ html, body {
                 flex-direction: column;
                 justify-content: center;
                 padding: 40px 80px;
-                max-width: 560px;
+                max-width: 700px;
                 width: 100%;
                 margin: 0 auto;
             }
@@ -133,10 +133,10 @@ html, body {
 
             @media (max-width: 767px) {
                 .login-left {
-                    min-height: auto;
-                    padding: 28px 24px;
+                    display: none;
                 }
                 .login-right .form-area {
                     padding: 32px 24px;
                 }
             }
+
