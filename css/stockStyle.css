@@ -1,0 +1,94 @@
+.stock-stat-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 991px) {
+    .stock-stat-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 575px) {
+    .stock-stat-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+.stock-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.stock-table th {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #9ca3af;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 11px 18px;
+    text-align: left;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+.stock-table td {
+    padding: 14px 18px;
+    font-size: 0.8125rem;
+    color: #111827;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+}
+.stock-table tbody tr:hover td {
+    background: #fafafa;
+}
+.stock-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.stock-item-name {
+    font-weight: 600;
+    color: #111827;
+}
+
+.badge-aman {
+    display: inline-block;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+.badge-menipis {
+    display: inline-block;
+    background: #fef3ee;
+    color: #c0421a;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+.badge-habis {
+    display: inline-block;
+    background: #fee2e2;
+    color: #dc2626;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.btn-perbarui {
+    color: #8c3815;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn-perbarui:hover {
+    color: #6b2609;
+    text-decoration: underline;
+}

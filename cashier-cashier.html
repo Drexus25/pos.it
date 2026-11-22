@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Kasir — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/cashierStyle.css" rel="stylesheet" />
+        <script src="js/productsData.js"></script>
+        <script src="js/transaction.js"></script>
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                <div class="topbar-user">
+                    <span class="topbar-avatar">R</span>
+                    Rosy
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard-cashier.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products-cashier.html" class="nav-item">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier-cashier.html" class="nav-item active">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="stock-cashier.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Kasir</h1>
+            </div>
+
+            <div class="cashier-layout">
+
+                <div class="cashier-catalog-col">
+                    <div class="cashier-toolbar">
+                        <div class="cashier-search-wrap">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="cashier-search-input" id="cashierSearchInput" placeholder="Cari produk..." />
+                        </div>
+                        <div class="cashier-filter-tabs" id="filterTabs">
+                            <button class="cashier-filter-tab active" data-filter="Semua">Semua</button>
+                            <button class="cashier-filter-tab" data-filter="Minuman">Minuman</button>
+                            <button class="cashier-filter-tab" data-filter="Makanan">Makanan</button>
+                        </div>
+                    </div>
+
+                    <div class="cashier-grid" id="productsGrid"></div>
+                </div>
+
+                <div class="cashier-order-col">
+                    <div class="cart-card">
+                        <div class="cart-title" id="orderNumberTitle">Pesanan #0001</div>
+
+                        <div class="cart-items-list" id="cartItemsList"></div>
+
+                        <div class="cart-notes-sec">
+                            <label class="cart-notes-label" for="orderNotes">Catatan (opsional)</label>
+                            <textarea id="orderNotes" class="cart-notes-input" placeholder="Misal: Kopi susu tanpa es, gula dipisah..."></textarea>
+                        </div>
+
+                        <div class="cart-summary">
+                            <div class="cart-summary-row">
+                                <span>Subtotal</span>
+                                <span id="cartSubtotal">Rp0</span>
+                            </div>
+                            <div class="cart-summary-row">
+                                <span>Pajak / biaya</span>
+                                <span>Rp0</span>
+                            </div>
+                            <div class="cart-total-row">
+                                <span class="cart-total-label">Total</span>
+                                <span class="cart-total-val" id="cartTotal">Rp0</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-bayar" id="btnPay" disabled>
+                            <i class="bi bi-arrow-right"></i> <span id="payBtnText">Bayar • Rp0</span>
+                        </button>
+                        <button class="btn-kosongkan" id="btnClearCart">Kosongkan pesanan</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <script>
+            let cart = [];
+            let activeCategory = 'Semua';
+            let searchQuery = '';
+            let selectedPayMethod = 'Tunai';
+
+            function getProductIconSvg(p) {
+                if (p.image) {
+                    return `<img src="${p.image}" alt="${p.nama}" />`;
+                }
+                const name = (p.nama || '').toLowerCase();
+                if (p.iconGreen || name.includes('matcha')) {
+                    return `<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`;
+                }
+                if (name.includes('croissant') || name.includes('pastry')) {
+                    return `<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4.6 13.4 3-3a6.5 6.5 0 0 1 9.2 0l3 3a2 2 0 0 1-2.8 2.8l-1.4-1.4a8 8 0 0 0-3.6-1.8 8 8 0 0 0-3.6 1.8l-1.4 1.4a2 2 0 0 1-2.4-2.8z"/><path d="m8.5 7.5 1.5 2.5"/><path d="m15.5 7.5-1.5 2.5"/></svg>`;
+                }
+                if (name.includes('roti') || name.includes('sandwich') || name.includes('toast') || (p.kategori || '').toLowerCase() === 'makanan') {
+                    return `<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7v2H3z"/><path d="M3 13h18v2a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M7 13v2"/><path d="M17 13v2"/></svg>`;
+                }
+                if (name.includes('teh') || name.includes('lemon') || name.includes('jus') || name.includes('straw') || name.includes('juice')) {
+                    return `<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m19 8-1.5 12.5a2 2 0 0 1-2 1.5H8.5a2 2 0 0 1-2-1.5L5 8"/><line x1="4" y1="8" x2="20" y2="8"/><line x1="14" y1="2" x2="11" y2="8"/></svg>`;
+                }
+                return `<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg>`;
+            }
+
+            function loadProductsList() {
+                return getProducts().filter(p => p.status === 'aktif');
+            }
+
+            function renderCatalog() {
+                const products = loadProductsList();
+                const grid = document.getElementById('productsGrid');
+
+                if (products.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 48px 16px; color: #6b7280; background: #fff; border-radius: 12px; border: 1px dashed #e5e7eb;">
+                            <i class="bi bi-box-seam" style="font-size: 2.5rem; display: block; margin-bottom: 12px; color: #9ca3af;"></i>
+                            <div style="font-size: 1rem; font-weight: 600; color: #111827; margin-bottom: 4px;">Belum ada produk aktif</div>
+                            <div style="font-size: 0.8125rem; margin-bottom: 16px;">Tambahkan produk terlebih dahulu untuk mulai melayani transaksi.</div>
+                            <a href="products-cashier.html" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; padding: 9px 18px; border-radius: 8px; background: #c0421a; color: #fff; font-size: 0.875rem; font-weight: 500;">
+                                <i class="bi bi-box-seam"></i> Lihat Produk
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const filtered = products.filter(p => {
+                    const matchCat = activeCategory === 'Semua' || (p.kategori || '').toLowerCase() === activeCategory.toLowerCase();
+                    const matchQuery = (p.nama || '').toLowerCase().includes(searchQuery);
+                    return matchCat && matchQuery;
+                });
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px 10px; color: #9ca3af; background: #fff; border-radius: 12px; border: 1px dashed #e5e7eb;">
+                            <i class="bi bi-search" style="font-size: 2rem; display: block; margin-bottom: 8px;"></i>
+                            Tidak ada produk yang cocok dengan pencarian.
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = filtered.map(p => {
+                    const stockNum = Number(p.stok) || 0;
+                    const isOutOfStock = stockNum <= 0;
+                    const cartItem = cart.find(ci => ci.id === p.id);
+                    const qtyInCart = cartItem ? cartItem.qty : 0;
+                    const inCart = qtyInCart > 0;
+                    const isGreen = p.iconGreen || (p.nama || '').toLowerCase().includes('matcha');
+
+                    const stockText = isOutOfStock ? 'Stok habis' : `Stok ${stockNum} ${p.satuan || 'pcs'}`;
+                    const priceFormatted = formatHarga(p.harga);
+
+                    let actionHtml = '';
+                    if (isOutOfStock) {
+                        actionHtml = `<span class="badge-tidak-tersedia">Tidak tersedia</span>`;
+                    } else if (inCart) {
+                        actionHtml = `
+                            <div class="card-qty-badge-group">
+                                <button type="button" class="btn-minus-item" onclick="event.stopPropagation(); updateCartQty(${p.id}, -1)">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <span class="card-qty-badge">${qtyInCart}</span>
+                                <button type="button" class="btn-add-item" onclick="event.stopPropagation(); addToCart(${p.id})">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        actionHtml = `
+                            <button type="button" class="btn-add-item" onclick="event.stopPropagation(); addToCart(${p.id})">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        `;
+                    }
+
+                    return `
+                        <div class="cashier-product-card ${inCart ? 'in-cart' : ''} ${isOutOfStock ? 'out-of-stock' : ''}" onclick="onCardClick(${p.id}, ${isOutOfStock})">
+                            <div class="product-card-img-wrap ${isGreen ? 'green' : ''}">
+                                ${getProductIconSvg(p)}
+                            </div>
+                            <div class="product-card-title">${p.nama}</div>
+                            <div class="product-card-stock">${stockText}</div>
+                            <div class="product-card-footer">
+                                <div class="product-card-price">${priceFormatted}</div>
+                                ${actionHtml}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function onCardClick(productId, isOutOfStock) {
+                if (isOutOfStock) {
+                    alert('Produk ini sedang habis stok.');
+                    return;
+                }
+                addToCart(productId);
+            }
+
+            function addToCart(productId) {
+                const products = loadProductsList();
+                const p = products.find(x => x.id === productId);
+                if (!p) return;
+
+                const stockNum = Number(p.stok) || 0;
+                if (stockNum <= 0) {
+                    alert('Produk habis.');
+                    return;
+                }
+
+                const existing = cart.find(x => x.id === productId);
+                if (existing) {
+                    if (existing.qty >= stockNum) {
+                        alert(`Stok hanya tersisa ${stockNum}.`);
+                        return;
+                    }
+                    existing.qty++;
+                } else {
+                    cart.push({
+                        id: p.id,
+                        nama: p.nama,
+                        harga: Number(p.harga),
+                        kategori: p.kategori,
+                        stok: stockNum,
+                        satuan: p.satuan || 'pcs',
+                        iconGreen: p.iconGreen,
+                        image: p.image,
+                        qty: 1
+                    });
+                }
+
+                renderCatalog();
+                renderCart();
+            }
+
+            function updateCartQty(productId, delta) {
+                const item = cart.find(x => x.id === productId);
+                if (!item) return;
+
+                const newQty = item.qty + delta;
+                if (newQty <= 0) {
+                    cart = cart.filter(x => x.id !== productId);
+                } else if (newQty > item.stok) {
+                    alert(`Stok hanya tersisa ${item.stok}.`);
+                    return;
+                } else {
+                    item.qty = newQty;
+                }
+
+                renderCatalog();
+                renderCart();
+            }
+
+            function removeFromCart(productId) {
+                cart = cart.filter(x => x.id !== productId);
+                renderCatalog();
+                renderCart();
+            }
+
+            function clearCart() {
+                cart = [];
+                document.getElementById('orderNotes').value = '';
+                renderCatalog();
+                renderCart();
+            }
+
+            function calculateTotals() {
+                const subtotal = cart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+                const tax = 0;
+                const total = subtotal + tax;
+                return { subtotal, tax, total };
+            }
+
+            function renderCart() {
+                const listEl = document.getElementById('cartItemsList');
+                const btnPay = document.getElementById('btnPay');
+                const payText = document.getElementById('payBtnText');
+                const subtotalEl = document.getElementById('cartSubtotal');
+                const totalEl = document.getElementById('cartTotal');
+
+                if (cart.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="cart-empty-msg">
+                            <i class="bi bi-cart"></i>
+                            <div style="font-weight:600; color:#4b5563; font-size:0.875rem;">Belum ada pesanan</div>
+                            <div style="font-size:0.75rem; margin-top:2px;">Klik produk untuk menambahkan</div>
+                        </div>
+                    `;
+                    subtotalEl.textContent = 'Rp0';
+                    totalEl.textContent = 'Rp0';
+                    payText.textContent = 'Bayar • Rp0';
+                    btnPay.disabled = true;
+                    return;
+                }
+
+                const { subtotal, total } = calculateTotals();
+
+                listEl.innerHTML = cart.map(item => {
+                    const isGreen = item.iconGreen || (item.nama || '').toLowerCase().includes('matcha');
+                    const lineTotal = formatHarga(item.harga * item.qty);
+                    const rateText = `${formatHarga(item.harga)} / item`;
+
+                    let iconInner = '';
+                    if (item.image) {
+                        iconInner = `<img src="${item.image}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />`;
+                    } else if (isGreen) {
+                        iconInner = `<i class="bi bi-flower1" style="color:#16a34a;"></i>`;
+                    } else if ((item.nama || '').toLowerCase().includes('roti') || (item.nama || '').toLowerCase().includes('croissant')) {
+                        iconInner = `<i class="bi bi-layers"></i>`;
+                    } else {
+                        iconInner = `<i class="bi bi-cup-hot"></i>`;
+                    }
+
+                    return `
+                        <div class="cart-item">
+                            <div class="cart-item-top">
+                                <div class="cart-item-left">
+                                    <div class="cart-item-icon ${isGreen ? 'green' : ''}">
+                                        ${iconInner}
+                                    </div>
+                                    <div class="cart-item-info">
+                                        <span class="cart-item-name">${item.nama}</span>
+                                        <span class="cart-item-rate">${rateText}</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-remove-item" onclick="removeFromCart(${item.id})">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                            <div class="cart-item-bottom">
+                                <div class="qty-control">
+                                    <button type="button" class="btn-qty" onclick="updateCartQty(${item.id}, -1)">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                    <span class="qty-num">${item.qty}</span>
+                                    <button type="button" class="btn-qty plus" onclick="updateCartQty(${item.id}, 1)">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                                <div class="cart-item-subtotal">${lineTotal}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                subtotalEl.textContent = formatHarga(subtotal);
+                totalEl.textContent = formatHarga(total);
+                payText.textContent = `Bayar • ${formatHarga(total)}`;
+                btnPay.disabled = false;
+            }
+
+            document.getElementById('cashierSearchInput').addEventListener('input', e => {
+                searchQuery = e.target.value.trim().toLowerCase();
+                renderCatalog();
+            });
+
+            document.querySelectorAll('.cashier-filter-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.cashier-filter-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    activeCategory = tab.dataset.filter;
+                    renderCatalog();
+                });
+            });
+
+            document.getElementById('btnClearCart').addEventListener('click', () => {
+                if (cart.length === 0) return;
+                if (confirm('Kosongkan semua pesanan?')) {
+                    clearCart();
+                }
+            });
+
+            const btnPay = document.getElementById('btnPay');
+            const nextTrx = getNextTransactionId();
+            document.getElementById('orderNumberTitle').textContent = nextTrx.order;
+
+            btnPay.addEventListener('click', () => {
+                if (cart.length === 0) return;
+                const { subtotal, tax, total } = calculateTotals();
+                const notes = document.getElementById('orderNotes').value.trim();
+                const freshTrx = getNextTransactionId();
+
+                const pendingOrder = {
+                    orderNo: freshTrx.id,
+                    orderSeq: freshTrx.order,
+                    items: cart,
+                    notes: notes,
+                    subtotal: subtotal,
+                    tax: tax,
+                    total: total
+                };
+
+                sessionStorage.setItem('posit_current_order', JSON.stringify(pendingOrder));
+                window.location.href = 'payment-cashier.html';
+            });
+
+            try {
+                const saved = sessionStorage.getItem('posit_current_order');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.items && parsed.items.length > 0) {
+                        cart = parsed.items;
+                        if (parsed.notes) {
+                            document.getElementById('orderNotes').value = parsed.notes;
+                        }
+                    }
+                }
+            } catch (e) {}
+
+            renderCatalog();
+            renderCart();
+        </script>
+
+    </body>
+</html>

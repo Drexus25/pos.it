@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="id" data-bs-theme="light">
+    <head>
+        <title>Tambah Produk — pos.it</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+        <link href="css/dashboardStyle.css" rel="stylesheet" />
+        <link href="css/addProductStyle.css" rel="stylesheet" />
+        <script src="js/productsData.js"></script>
+        <script src="js/companyProfile.js"></script>
+    </head>
+
+    <body>
+
+        <div class="topbar">
+            <a href="index.html" class="topbar-brand">
+                <span class="topbar-brand-logo"><i class="bi bi-box"></i></span>
+                pos.it
+            </a>
+            <div class="topbar-right">
+                <div class="topbar-user">
+                    <span class="topbar-avatar">R</span>
+                    Rosy
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-business">
+                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
+                <div class="sidebar-business-info">
+                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
+                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
+                </div>
+            </div>
+
+            <a href="dashboard-cashier.html" class="nav-item">
+                <i class="bi bi-grid-1x2"></i> Beranda
+            </a>
+            <a href="products-cashier.html" class="nav-item active">
+                <i class="bi bi-box-seam"></i> Produk
+            </a>
+            <a href="cashier-cashier.html" class="nav-item">
+                <i class="bi bi-receipt"></i> Kasir
+            </a>
+            <a href="stock-cashier.html" class="nav-item">
+                <i class="bi bi-archive"></i> Stok
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-logout">
+                <a href="login.html" class="nav-item">
+                    <i class="bi bi-box-arrow-left"></i> Keluar
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="page-header">
+                <h1 class="page-title">Tambah produk</h1>
+            </div>
+
+            <form id="addProductForm" novalidate>
+                <div class="add-product-layout">
+
+                    <div class="left-col-add">
+                        <div class="form-card">
+                            <div class="form-card-title">Informasi produk</div>
+
+                            <div style="margin-bottom: 16px;">
+                                <label class="form-label-custom" for="namaProduk">
+                                    Nama produk <span class="required">*</span>
+                                </label>
+                                <input type="text" id="namaProduk" class="form-input" placeholder="" />
+                            </div>
+
+                            <div class="form-row" style="margin-bottom: 16px;">
+                                <div>
+                                    <label class="form-label-custom" for="hargaJual">
+                                        Harga jual <span class="required">*</span>
+                                    </label>
+                                    <input type="text" id="hargaJual" class="form-input" placeholder="Rp0" />
+                                </div>
+                                <div>
+                                    <label class="form-label-custom" for="kategori">Kategori</label>
+                                    <select id="kategori" class="form-input form-select-custom">
+                                        <option value="" disabled selected></option>
+                                        <option value="Minuman">Minuman</option>
+                                        <option value="Makanan">Makanan</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="form-label-custom" for="deskripsi">Deskripsi</label>
+                                <textarea id="deskripsi" class="form-input form-textarea" placeholder=""></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <div class="form-card-title">Persediaan awal</div>
+                            <div class="form-row">
+                                <div>
+                                    <label class="form-label-custom" for="stokAwal">
+                                        Stok awal <span class="required">*</span>
+                                    </label>
+                                    <input type="number" id="stokAwal" class="form-input" placeholder="0" min="0" />
+                                </div>
+                                <div>
+                                    <label class="form-label-custom" for="batasMinimum">
+                                        Batas minimum stok <span class="required">*</span>
+                                    </label>
+                                    <input type="number" id="batasMinimum" class="form-input" placeholder="0" min="0" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="products-cashier.html" class="btn-batal">Batal</a>
+                            <button type="submit" class="btn-simpan">
+                                <i class="bi bi-check-lg"></i> Simpan produk
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="right-col-add">
+                        <div class="form-card">
+                            <div class="form-card-title">Gambar produk</div>
+                            <div class="image-upload-area" id="imagePreviewArea">
+                                <i class="bi bi-cup-hot"></i>
+                            </div>
+                            <input type="file" id="imageInput" accept="image/jpeg,image/png" style="display:none;" />
+                            <a class="upload-link" onclick="document.getElementById('imageInput').click()">
+                                <i class="bi bi-upload"></i> Unggah atau ganti gambar
+                            </a>
+                            <p class="upload-note">JPG / PNG • maksimal 2 MB</p>
+                        </div>
+
+                        <div class="form-card">
+                            <div class="preview-title">Pratinjau produk</div>
+                            <div class="preview-name" id="previewName">—</div>
+                            <div class="preview-row">
+                                <span class="preview-row-label">Harga jual</span>
+                                <span class="preview-row-value" id="previewHarga">—</span>
+                            </div>
+                            <div class="preview-row">
+                                <span class="preview-row-label">Stok awal</span>
+                                <span class="preview-row-value" id="previewStok">—</span>
+                            </div>
+                            <div class="preview-row">
+                                <span class="preview-row-label">Kategori</span>
+                                <span class="preview-row-value" id="previewKategori">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+        </main>
+
+        <script>
+            const namaProduk    = document.getElementById('namaProduk');
+            const hargaJual     = document.getElementById('hargaJual');
+            const kategori      = document.getElementById('kategori');
+            const deskripsi     = document.getElementById('deskripsi');
+            const stokAwal      = document.getElementById('stokAwal');
+            const batasMinimum  = document.getElementById('batasMinimum');
+
+            const previewName    = document.getElementById('previewName');
+            const previewHarga   = document.getElementById('previewHarga');
+            const previewStok    = document.getElementById('previewStok');
+            const previewKategori = document.getElementById('previewKategori');
+
+            let uploadedImageData = null;
+
+            function updatePreview() {
+                previewName.textContent    = namaProduk.value.trim() || '—';
+                const rawPrice = hargaJual.value.replace(/\D/g, '');
+                previewHarga.textContent   = rawPrice ? formatHarga(rawPrice) : '—';
+                previewStok.textContent    = stokAwal.value !== '' ? `${stokAwal.value} pcs` : '—';
+                previewKategori.textContent = kategori.value || '—';
+            }
+
+            namaProduk.addEventListener('input', updatePreview);
+            hargaJual.addEventListener('input', updatePreview);
+            kategori.addEventListener('change', updatePreview);
+            stokAwal.addEventListener('input', updatePreview);
+
+            document.getElementById('imageInput').addEventListener('change', function () {
+                const file = this.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = e => {
+                    uploadedImageData = e.target.result;
+                    const area = document.getElementById('imagePreviewArea');
+                    area.innerHTML = `<img src="${uploadedImageData}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />`;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('addProductForm').addEventListener('submit', e => {
+                e.preventDefault();
+
+                const nama = namaProduk.value.trim();
+                const rawPrice = hargaJual.value.replace(/\D/g, '');
+                const harga = Number(rawPrice);
+                const kat = kategori.value || 'Lainnya';
+                const stok = stokAwal.value !== '' ? Number(stokAwal.value) : 0;
+                const minStok = batasMinimum.value !== '' ? Number(batasMinimum.value) : 5;
+                const desc = deskripsi.value.trim();
+
+                if (!nama) {
+                    alert('Nama produk wajib diisi.');
+                    namaProduk.focus();
+                    return;
+                }
+                if (!rawPrice) {
+                    alert('Harga jual wajib diisi.');
+                    hargaJual.focus();
+                    return;
+                }
+
+                let icon = 'bi-box-seam';
+                if (kat.toLowerCase() === 'minuman') icon = 'bi-cup-hot';
+                else if (kat.toLowerCase() === 'makanan') icon = 'bi-bookmark';
+
+                addProduct({
+                    nama: nama,
+                    harga: harga,
+                    kategori: kat,
+                    stok: stok,
+                    satuan: kat.toLowerCase() === 'minuman' ? 'gelas' : 'porsi',
+                    minStok: minStok,
+                    deskripsi: desc,
+                    status: 'aktif',
+                    icon: icon,
+                    iconGreen: kat.toLowerCase().includes('matcha'),
+                    image: uploadedImageData
+                });
+
+                alert('Produk berhasil disimpan!');
+                window.location.href = 'products-cashier.html';
+            });
+        </script>
+
+    </body>
+</html>
