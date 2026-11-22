@@ -12,6 +12,7 @@
         <link href="css/addProductStyle.css" rel="stylesheet" />
         <script src="js/productsData.js"></script>
         <script src="js/companyProfile.js"></script>
+        <script src="js/sonner.js"></script>
     </head>
 
     <body>
@@ -30,13 +31,7 @@
         </div>
 
         <aside class="sidebar">
-            <div class="sidebar-business">
-                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
-                <div class="sidebar-business-info">
-                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
-                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
-                </div>
-            </div>
+
 
             <a href="dashboard-cashier.html" class="nav-item">
                 <i class="bi bi-grid-1x2"></i> Beranda
@@ -230,7 +225,7 @@
 
                 let icon = 'bi-box-seam';
                 if (kat.toLowerCase() === 'minuman') icon = 'bi-cup-hot';
-                else if (kat.toLowerCase() === 'makanan') icon = 'bi-bookmark';
+                else if (kat.toLowerCase() === 'makanan') icon = 'makanan';
 
                 addProduct({
                     nama: nama,
@@ -246,8 +241,10 @@
                     image: uploadedImageData
                 });
 
-                alert('Produk berhasil disimpan!');
-                window.location.href = 'products-cashier.html';
+                toast.success('Produk berhasil disimpan!');
+                setTimeout(() => {
+                    window.location.href = 'products-cashier.html';
+                }, 900);
             });
         </script>
 

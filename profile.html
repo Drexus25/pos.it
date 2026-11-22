@@ -12,6 +12,7 @@
         <link href="css/addProductStyle.css" rel="stylesheet" />
         <link href="css/profileStyle.css" rel="stylesheet" />
         <script src="js/companyProfile.js"></script>
+        <script src="js/sonner.js"></script>
     </head>
 
     <body>
@@ -30,13 +31,7 @@
         </div>
 
         <aside class="sidebar">
-            <div class="sidebar-business">
-                <span class="sidebar-business-icon"><i class="bi bi-shop"></i></span>
-                <div class="sidebar-business-info">
-                    <div class="sidebar-business-name" id="sidebarBusinessName"></div>
-                    <div class="sidebar-business-type" id="sidebarBusinessType"></div>
-                </div>
-            </div>
+
 
             <a href="dashboard.html" class="nav-item">
                 <i class="bi bi-grid-1x2"></i> Beranda
@@ -204,8 +199,8 @@
                 prevAlamat.textContent = currentProfile.address || '-';
                 prevTelepon.textContent = currentProfile.phone || '-';
 
-                sidebarName.textContent = currentProfile.name || '';
-                sidebarType.textContent = currentProfile.type ? `Usaha ${currentProfile.type.toLowerCase()}` : '';
+                if (sidebarName) sidebarName.textContent = currentProfile.name || '';
+                if (sidebarType) sidebarType.textContent = currentProfile.type ? `Usaha ${currentProfile.type.toLowerCase()}` : '';
 
                 applyLogo(currentProfile.logo);
             }
@@ -213,11 +208,11 @@
             inputNama.addEventListener('input', () => {
                 const val = inputNama.value.trim();
                 prevNama.textContent = val || '-';
-                sidebarName.textContent = val;
+                if (sidebarName) sidebarName.textContent = val;
             });
 
             selectJenis.addEventListener('change', () => {
-                sidebarType.textContent = selectJenis.value ? `Usaha ${selectJenis.value.toLowerCase()}` : '';
+                if (sidebarType) sidebarType.textContent = selectJenis.value ? `Usaha ${selectJenis.value.toLowerCase()}` : '';
             });
 
             inputAlamat.addEventListener('input', () => {
@@ -280,8 +275,8 @@
                 saveProfile(updated);
                 currentProfile = updated;
 
-                sidebarName.textContent = nama;
-                sidebarType.textContent = `Usaha ${jenis.toLowerCase()}`;
+                if (sidebarName) sidebarName.textContent = nama;
+                if (sidebarType) sidebarType.textContent = `Usaha ${jenis.toLowerCase()}`;
 
                 alert('Profil usaha berhasil disimpan!');
             });
