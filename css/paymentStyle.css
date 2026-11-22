@@ -255,7 +255,7 @@
 }
 .cash-input:focus,
 .input-pay-cash:focus {
-    border-color: #8c3815;
+    border-color: #c0421a;
 }
 .cash-input-hint,
 .input-pay-hint {
@@ -347,7 +347,7 @@
 /* Confirmation Button */
 .btn-confirm-pay {
     width: 100%;
-    background: #8c3815;
+    background: #c0421a;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -363,7 +363,7 @@
     font-family: 'Inter', sans-serif;
 }
 .btn-confirm-pay:hover:not(:disabled) {
-    background: #702a0e;
+    background: #a03612;
 }
 .btn-confirm-pay:disabled {
     background: #e5e7eb;
@@ -425,7 +425,7 @@
     position: absolute;
     width: 18px;
     height: 18px;
-    border-color: #8c3815;
+    border-color: #c0421a;
     border-style: solid;
     pointer-events: none;
 }
@@ -724,7 +724,7 @@
     font-family: 'Inter', sans-serif;
 }
 .btn-share-wa:hover {
-    background: #a33512;
+    background: #a03612;
 }
 
 .share-action-grid {
@@ -755,7 +755,7 @@
 
 .btn-new-trx {
     width: 100%;
-    background: #8c3815;
+    background: #c0421a;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -772,7 +772,7 @@
     font-family: 'Inter', sans-serif;
 }
 .btn-new-trx:hover {
-    background: #702a0e;
+    background: #a03612;
     color: #fff;
 }
 

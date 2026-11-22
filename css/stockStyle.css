@@ -80,7 +80,7 @@
 }
 
 .btn-perbarui {
-    color: #8c3815;
+    color: #c0421a;
     font-weight: 600;
     font-size: 0.8125rem;
     text-decoration: none;
@@ -89,6 +89,6 @@
     gap: 4px;
 }
 .btn-perbarui:hover {
-    color: #6b2609;
+    color: #a03612;
     text-decoration: underline;
 }

@@ -49,8 +49,8 @@
     transition: border-color 0.15s, box-shadow 0.15s;
 }
 .cashier-search-input:focus {
-    border-color: #8c3815;
-    box-shadow: 0 0 0 3px rgba(140, 56, 21, 0.1);
+    border-color: #c0421a;
+    box-shadow: 0 0 0 3px rgba(192, 66, 26, 0.1);
 }
 
 .cashier-filter-tabs {
@@ -378,7 +378,7 @@
     transition: border-color 0.15s;
 }
 .cart-notes-input:focus {
-    border-color: #8c3815;
+    border-color: #c0421a;
 }
 
 .cart-summary {
@@ -415,7 +415,7 @@
 
 .btn-bayar {
     width: 100%;
-    background-color: #8c3815;
+    background-color: #c0421a;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -431,7 +431,7 @@
     transition: background-color 0.15s;
 }
 .btn-bayar:hover:not(:disabled) {
-    background-color: #702a0e;
+    background-color: #a03612;
 }
 .btn-bayar:disabled {
     opacity: 0.5;
